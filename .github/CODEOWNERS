@@ -1,0 +1,37 @@
+# KFIN Repository Code Ownership
+# Uses role-based placeholders per Sub-Phase 0.2 Specification (§61)
+# Formal appointments: TBD — governance appointment required
+
+# Global fallback
+* @kfin-governance/core-maintainers
+
+# Governance and Constitution
+/docs/governance/ @kfin-governance/architecture-authority @kfin-governance/phase-owner
+
+# Architecture and ADRs
+/docs/architecture/ @kfin-governance/architecture-authority
+
+# Security Policies and Scans
+/docs/security/ @kfin-governance/security-authority
+SECURITY.md @kfin-governance/security-authority
+/scripts/src/secret-scan.ts @kfin-governance/security-authority
+
+# Database boundaries and schemas
+/database/ @kfin-governance/database-authority
+/lib/db/ @kfin-governance/database-authority
+
+# API Specifications and Contracts
+/lib/api-spec/ @kfin-governance/api-authority @kfin-governance/architecture-authority
+/docs/api/ @kfin-governance/api-authority
+
+# Frontend Applications
+/artifacts/kfin-console/ @kfin-governance/frontend-lead
+/apps/ @kfin-governance/frontend-lead
+
+# Backend Services
+/artifacts/api-server/ @kfin-governance/backend-lead
+/services/ @kfin-governance/backend-lead
+
+# Infrastructure and Deployment
+/infrastructure/ @kfin-governance/infrastructure-lead
+/.github/workflows/ @kfin-governance/infrastructure-lead

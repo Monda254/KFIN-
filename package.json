@@ -1,0 +1,22 @@
+{
+  "name": "workspace",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "preinstall": "npx --yes only-allow pnpm",
+    "build": "pnpm run typecheck && pnpm --filter @workspace/api-server run build && pnpm --filter @workspace/kfin-console run build",
+    "format": "prettier --write package.json README.md",
+    "format:check": "prettier --check package.json README.md",
+    "typecheck:libs": "tsc --build",
+    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
+    "test": "pnpm --filter @workspace/scripts run test",
+    "security:secrets": "pnpm --filter @workspace/scripts run secret-scan",
+    "security:dependencies": "pnpm audit --audit-level=high",
+    "quality:ci": "pnpm run format:check && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run security:secrets && pnpm run security:dependencies"
+  },
+  "private": true,
+  "devDependencies": {
+    "prettier": "^3.9.6",
+    "typescript": "~5.9.3"
+  }
+}

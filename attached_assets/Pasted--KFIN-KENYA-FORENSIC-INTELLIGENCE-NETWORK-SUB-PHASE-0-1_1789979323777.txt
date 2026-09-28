@@ -1,0 +1,2568 @@
+# KFIN — KENYA FORENSIC INTELLIGENCE NETWORK
+
+# SUB-PHASE 0.1 MASTER IMPLEMENTATION PROMPT
+
+## KFIN DEVELOPMENT CONSTITUTION & ENGINEERING GOVERNANCE
+
+**Parent Phase:** Phase 0 — Development Foundation
+**Sub-Phase:** 0.1
+**Sub-Phase Name:** KFIN Development Constitution & Engineering Governance
+**Status:** Authoritative Implementation Prompt
+**Execution Type:** Documentation, governance, engineering-policy and control foundation
+**Depends On:** KFIN Master Specification + Phase 0 Master Prompt
+**Precedes:** 0.2 Repository & Monorepo Foundation
+**Production Functionality:** NONE
+
+---
+
+# 1. MISSION
+
+You are implementing **KFIN Sub-Phase 0.1**.
+
+Your task is to create the formal **KFIN Development Constitution** and the supporting governance artifacts that will control how KFIN is developed throughout all subsequent implementation phases.
+
+This is not a generic software-development README.
+
+KFIN is being designed as a national forensic intelligence and information-management platform involving potentially sensitive, legally significant and operationally important information.
+
+The development constitution must therefore establish engineering rules appropriate for a system that must eventually support:
+
+* forensic evidence;
+* DNA information;
+* forensic profiles;
+* case information;
+* persons;
+* missing persons;
+* unidentified remains;
+* offender information;
+* elimination databases;
+* chain of custody;
+* provenance;
+* auditability;
+* historical reconstruction;
+* national interoperability;
+* intelligence analysis;
+* graph relationships;
+* institutional access;
+* clearance-based access;
+* privacy;
+* data governance;
+* cybersecurity;
+* resilience;
+* controlled analytical capabilities;
+* carefully governed AI.
+
+**Do not implement those operational domains in this sub-phase.**
+
+Instead, establish the rules that will ensure they are implemented correctly later.
+
+---
+
+# 2. FUNDAMENTAL OBJECTIVE
+
+At the completion of 0.1, KFIN must have a written and version-controlled **development constitution** that answers:
+
+> How must every future person, team, service, database, API, AI agent, infrastructure component and implementation phase behave while building KFIN?
+
+The constitution must prevent future development from becoming:
+
+* ad hoc;
+* undocumented;
+* architecturally inconsistent;
+* insecure;
+* difficult to audit;
+* impossible to reproduce;
+* overly dependent on individual developers;
+* dependent on undocumented conversations;
+* vulnerable to AI-generated architectural drift.
+
+---
+
+# 3. AUTHORITATIVE CONTEXT
+
+Before creating the constitution, inspect the authoritative KFIN material available in the project.
+
+The relevant architectural history includes:
+
+```text
+Exercises 1–25
+       ↓
+General Exercise
+       ↓
+Architectural Reconciliation
+       ↓
+Canonical Domain Model
+       ↓
+Final ERD
+       ↓
+Security & Threat Model
+       ↓
+Workflow & State-Machine Specification
+       ↓
+API & Interoperability Specification
+       ↓
+Data Governance Specification
+       ↓
+Technical Architecture Specification
+       ↓
+KFIN Master Specification
+       ↓
+Phase 0 Master Prompt
+       ↓
+0.1 Development Constitution
+```
+
+The constitution must preserve the architectural intent of those documents.
+
+Do not restart the architectural discovery exercises.
+
+Do not replace previously established decisions with generic software-development assumptions.
+
+---
+
+# 4. SOURCE AUTHORITY
+
+Use the following authority order when determining what the constitution should govern:
+
+```text
+1. Approved KFIN Master Specification
+2. Approved Technical Architecture
+3. Approved Security & Threat Model
+4. Approved Data Governance Specification
+5. Approved Workflow Specification
+6. Approved API/Interoperability Specification
+7. Approved Domain Model
+8. Approved ERD
+9. Approved Architectural Reconciliation
+10. Phase-level implementation requirements
+11. Sub-phase requirements
+12. Implementation preferences
+```
+
+If conflicting information is discovered:
+
+**DO NOT silently choose one.**
+
+Instead:
+
+1. identify the conflict;
+2. record the affected requirement;
+3. identify the authoritative source;
+4. determine whether an ADR is required;
+5. document the decision;
+6. update the relevant artifact if authorized.
+
+---
+
+# 5. CORE PRINCIPLE
+
+The constitution must establish:
+
+> **No significant KFIN behavior should depend solely on undocumented developer memory.**
+
+If an important engineering rule matters, it should be:
+
+* documented;
+* version-controlled;
+* traceable;
+* enforceable where possible.
+
+---
+
+# 6. REQUIRED PRIMARY ARTIFACT
+
+Create:
+
+```text
+docs/governance/KFIN-DEVELOPMENT-CONSTITUTION.md
+```
+
+This is the primary deliverable.
+
+Do not create a shallow document.
+
+The constitution must be sufficiently detailed that a new authorized developer joining KFIN can understand how development is expected to occur without relying on private conversations.
+
+---
+
+# 7. REQUIRED SUPPORTING GOVERNANCE ARTIFACTS
+
+Where appropriate, create:
+
+```text
+docs/governance/
+docs/architecture/adr/
+docs/development/
+```
+
+At minimum, establish:
+
+```text
+docs/governance/KFIN-DEVELOPMENT-CONSTITUTION.md
+docs/architecture/adr/0000-template.md
+```
+
+Additional supporting documents may be created when they reduce duplication or improve maintainability.
+
+Do not create documents merely for the sake of creating files.
+
+---
+
+# 8. CONSTITUTION STRUCTURE
+
+The Development Constitution must contain, at minimum, the following major sections:
+
+```text
+1. Purpose
+2. Scope
+3. KFIN Engineering Principles
+4. Architectural Authority
+5. Requirement Traceability
+6. Development Lifecycle
+7. Phase and Sub-Phase Governance
+8. Coding Standards
+9. Naming Standards
+10. Type Safety
+11. Application Architecture Rules
+12. Domain Boundary Rules
+13. Database Development Rules
+14. API Development Rules
+15. Error Handling
+16. Logging
+17. Configuration Management
+18. Secrets Management
+19. Security Development
+20. Privacy and Data Protection
+21. Forensic Integrity
+22. Auditability
+23. Testing
+24. Test Data
+25. Git and Version Control
+26. Pull Requests and Code Review
+27. Architecture Decision Records
+28. Dependency Governance
+29. Documentation
+30. AI-Assisted Development
+31. Change Management
+32. Vulnerability Management
+33. Incident and Failure Handling
+34. Environment Management
+35. CI/CD Governance
+36. Observability Principles
+37. Accessibility
+38. Performance Engineering
+39. Release Governance
+40. Definition of Done
+41. Exceptions
+42. Enforcement
+43. Governance Ownership
+44. Amendment Procedure
+45. Constitution Versioning
+```
+
+The exact organization may be refined, but none of the substantive areas may be silently omitted.
+
+---
+
+# 9. SECTION 1 — PURPOSE
+
+Explain why the constitution exists.
+
+The document must explicitly establish that KFIN requires a formal engineering constitution because its eventual system will involve:
+
+* sensitive information;
+* forensic information;
+* institutional users;
+* legal and investigative contexts;
+* cross-institution information exchange;
+* high accountability requirements.
+
+State that the constitution exists to provide consistency across the entire implementation lifecycle.
+
+---
+
+# 10. SECTION 2 — SCOPE
+
+Define the constitution's scope.
+
+It must govern:
+
+* developers;
+* technical leads;
+* architects;
+* security engineers;
+* database engineers;
+* DevOps engineers;
+* testers;
+* documentation contributors;
+* AI-assisted development;
+* automated coding agents;
+* future implementation teams;
+* repositories;
+* services;
+* applications;
+* databases;
+* APIs;
+* infrastructure.
+
+The constitution applies throughout all KFIN phases unless a higher-authority specification explicitly supersedes a provision.
+
+---
+
+# 11. SECTION 3 — KFIN ENGINEERING PRINCIPLES
+
+Define the fundamental engineering principles.
+
+At minimum include:
+
+## 11.1 Security by Design
+
+Security must be considered before implementation rather than added after functionality exists.
+
+## 11.2 Privacy by Design
+
+Systems must minimize unnecessary exposure and collection of sensitive information.
+
+## 11.3 Least Privilege
+
+Every user, service and process should receive only the access required.
+
+## 11.4 Explicit Architecture
+
+Important architectural decisions must be visible and documented.
+
+## 11.5 Traceability
+
+Requirements must be traceable to implementation and verification.
+
+## 11.6 Reproducibility
+
+Development and deployment processes should be repeatable.
+
+## 11.7 Testability
+
+Components should be designed so their behavior can be verified.
+
+## 11.8 Fail Securely
+
+Failure must not silently weaken security.
+
+## 11.9 No Silent Data Mutation
+
+Sensitive information must not be modified without controlled mechanisms.
+
+## 11.10 No False Success
+
+The system and development process must never report success when verification has not occurred.
+
+## 11.11 Minimal Trust
+
+Trust must be explicit rather than assumed.
+
+## 11.12 Separation of Duties
+
+Where appropriate, critical operations should require separation of responsibilities.
+
+## 11.13 Evidence Preservation
+
+Future forensic information must be capable of preserving integrity and provenance.
+
+## 11.14 Controlled Change
+
+Important changes must be deliberate, reviewable and traceable.
+
+---
+
+# 12. SECTION 4 — ARCHITECTURAL AUTHORITY
+
+Define the hierarchy controlling architectural decisions.
+
+Use:
+
+```text
+KFIN MASTER SPECIFICATION
+        ↓
+PHASE SPECIFICATION
+        ↓
+SUB-PHASE SPECIFICATION
+        ↓
+ADR
+        ↓
+IMPLEMENTATION
+```
+
+Explain how ADRs interact with the hierarchy.
+
+An implementation agent must not:
+
+* redesign the architecture because it is easier;
+* substitute a framework without justification;
+* create undocumented service boundaries;
+* change database semantics;
+* change security assumptions;
+* remove requirements.
+
+---
+
+# 13. ARCHITECTURAL CONFLICT PROCEDURE
+
+When an implementation requirement conflicts with architecture:
+
+```text
+STOP
+ ↓
+IDENTIFY CONFLICT
+ ↓
+DOCUMENT
+ ↓
+ASSESS IMPACT
+ ↓
+CREATE/UPDATE ADR
+ ↓
+OBTAIN AUTHORIZATION
+ ↓
+IMPLEMENT
+```
+
+Do not silently "fix" architecture.
+
+---
+
+# 14. SECTION 5 — REQUIREMENT TRACEABILITY
+
+Establish the KFIN traceability chain:
+
+```text
+Exercise
+   ↓
+Architectural Finding
+   ↓
+Step
+   ↓
+Master Specification
+   ↓
+Phase
+   ↓
+Sub-Phase
+   ↓
+Requirement
+   ↓
+Implementation
+   ↓
+Test
+   ↓
+Audit
+   ↓
+Acceptance
+```
+
+Define how this will eventually be represented in project documentation.
+
+The purpose is to prevent important requirements discovered during Exercises 1–25 from disappearing during implementation.
+
+---
+
+# 15. REQUIREMENT IDENTIFIERS
+
+Establish a convention for requirement IDs.
+
+For example:
+
+```text
+KFIN-REQ-XXXX
+```
+
+Phase-specific requirements may use:
+
+```text
+KFIN-P0-REQ-XXXX
+```
+
+Sub-phase requirements may use:
+
+```text
+KFIN-P0.1-REQ-XXXX
+```
+
+The exact convention may be adjusted if the master specification already defines one.
+
+Do not create competing identifier systems.
+
+---
+
+# 16. SECTION 6 — DEVELOPMENT LIFECYCLE
+
+Define the controlled lifecycle:
+
+```text
+DISCOVERY
+ ↓
+REQUIREMENT
+ ↓
+DESIGN
+ ↓
+IMPLEMENTATION
+ ↓
+TEST
+ ↓
+SECURITY REVIEW
+ ↓
+CODE REVIEW
+ ↓
+CI
+ ↓
+ACCEPTANCE
+ ↓
+RELEASE
+ ↓
+MONITORING
+```
+
+Explain that not every trivial change requires identical governance, but critical changes require proportionately stronger controls.
+
+---
+
+# 17. SECTION 7 — PHASE GOVERNANCE
+
+Define how phases and sub-phases operate.
+
+Each phase must have:
+
+* defined objectives;
+* defined scope;
+* defined inputs;
+* defined outputs;
+* dependencies;
+* acceptance criteria;
+* failure conditions;
+* exit gate.
+
+Each sub-phase must be independently verifiable.
+
+A later phase must not assume that an earlier phase was completed merely because code exists.
+
+---
+
+# 18. PHASE LOCKING
+
+When a phase passes:
+
+* its completion must be documented;
+* unresolved deviations must be recorded;
+* changes affecting the completed phase must follow change control.
+
+A completed phase is not immutable forever, but modifications must be traceable.
+
+---
+
+# 19. SECTION 8 — CODING STANDARDS
+
+Define standards for all approved languages.
+
+At minimum:
+
+### TypeScript
+
+Require:
+
+* strict typing;
+* meaningful types;
+* controlled use of `any`;
+* predictable interfaces;
+* clear module boundaries.
+
+### Python
+
+Require:
+
+* type annotations where appropriate;
+* clear module boundaries;
+* explicit error handling;
+* predictable dependency usage.
+
+### SQL
+
+Require:
+
+* consistent naming;
+* explicit constraints;
+* intentional indexes;
+* safe migrations;
+* transaction awareness.
+
+### Shell
+
+Require:
+
+* safe execution;
+* documented purpose;
+* predictable exit behavior.
+
+---
+
+# 20. CODE QUALITY PRINCIPLES
+
+Code should favor:
+
+* clarity;
+* maintainability;
+* composability;
+* testability;
+* explicit behavior.
+
+Avoid:
+
+* unnecessary abstraction;
+* premature optimization;
+* duplicated business logic;
+* hidden side effects;
+* magic values;
+* dead code.
+
+---
+
+# 21. SECTION 9 — NAMING STANDARDS
+
+Define naming rules for:
+
+* directories;
+* files;
+* variables;
+* functions;
+* classes;
+* interfaces;
+* types;
+* database tables;
+* columns;
+* indexes;
+* constraints;
+* API resources;
+* events;
+* environment variables;
+* tests;
+* documentation.
+
+Naming must favor semantic clarity.
+
+KFIN domain terminology must be preserved consistently.
+
+Do not casually rename domain concepts.
+
+---
+
+# 22. SECTION 10 — TYPE SAFETY
+
+Type systems must be used to prevent avoidable defects.
+
+Define:
+
+* strict TypeScript;
+* explicit API contracts;
+* validation boundaries;
+* Python typing;
+* typed configuration;
+* typed responses.
+
+Do not use type suppression merely to make builds pass.
+
+Every significant suppression must have justification.
+
+---
+
+# 23. SECTION 11 — APPLICATION ARCHITECTURE RULES
+
+Establish architectural separation between:
+
+```text
+Presentation
+    ↓
+Application
+    ↓
+Domain
+    ↓
+Infrastructure
+```
+
+Use the exact architecture already approved by the KFIN Technical Architecture Specification.
+
+The constitution must prevent:
+
+* UI code directly owning domain rules;
+* controllers containing large business processes;
+* database access scattered throughout application code;
+* infrastructure assumptions leaking into domain logic.
+
+Do not impose a pattern that conflicts with the approved architecture.
+
+---
+
+# 24. SECTION 12 — DOMAIN BOUNDARY RULES
+
+Future KFIN domains must remain conceptually separable.
+
+Examples include:
+
+* identity/access;
+* cases;
+* persons;
+* evidence;
+* specimens;
+* laboratory;
+* DNA;
+* missing persons;
+* unidentified remains;
+* intelligence;
+* interoperability;
+* audit;
+* governance.
+
+The constitution must establish that cross-domain interaction should occur through explicit contracts rather than uncontrolled database coupling.
+
+Do not implement these domains in 0.1.
+
+---
+
+# 25. SECTION 13 — DATABASE DEVELOPMENT RULES
+
+Establish rules for future database development.
+
+At minimum cover:
+
+* migrations;
+* constraints;
+* foreign keys;
+* indexes;
+* unique constraints;
+* nullability;
+* timestamps;
+* identifiers;
+* transactional integrity;
+* schema reviews;
+* rollback strategy;
+* migration testing.
+
+Future sensitive records must not rely solely on application-level integrity.
+
+Where a rule belongs in the database, it should be enforced there where technically appropriate.
+
+---
+
+# 26. DATABASE MIGRATION RULES
+
+No uncontrolled schema changes.
+
+Schema modifications must be:
+
+* versioned;
+* reviewable;
+* reproducible;
+* tested.
+
+Never instruct developers to manually alter production schema without a controlled migration mechanism.
+
+---
+
+# 27. SECTION 14 — API DEVELOPMENT RULES
+
+Define standards for:
+
+* endpoint naming;
+* HTTP semantics;
+* request validation;
+* response structure;
+* errors;
+* pagination;
+* filtering;
+* sorting;
+* versioning;
+* authentication;
+* authorization;
+* rate limiting;
+* idempotency where applicable.
+
+Future APIs must be treated as contracts.
+
+Do not expose internal database structures as an accidental API design.
+
+---
+
+# 28. API ERROR CONTRACT
+
+Define a consistent error model capable of distinguishing:
+
+* validation;
+* authentication;
+* authorization;
+* not found;
+* conflict;
+* domain failure;
+* infrastructure failure;
+* unexpected failure.
+
+Never expose:
+
+* stack traces;
+* secrets;
+* database credentials;
+* internal infrastructure details;
+* sensitive forensic information.
+
+---
+
+# 29. SECTION 15 — ERROR HANDLING
+
+Errors must be:
+
+* explicit;
+* observable;
+* appropriately classified;
+* safely presented.
+
+Do not use:
+
+```text
+except:
+    pass
+```
+
+or equivalent silent failure patterns.
+
+Failures involving sensitive operations must leave appropriate audit/observability evidence when the future architecture requires it.
+
+---
+
+# 30. SECTION 16 — LOGGING
+
+Establish structured logging requirements.
+
+Logs should support:
+
+* timestamp;
+* severity;
+* service;
+* environment;
+* request ID;
+* correlation ID;
+* event type;
+* relevant non-sensitive context.
+
+Never log:
+
+* passwords;
+* tokens;
+* private keys;
+* secrets;
+* unnecessary DNA information;
+* unnecessary identity information;
+* sensitive evidence details.
+
+---
+
+# 31. AUDIT LOG VS APPLICATION LOG
+
+Explicitly distinguish:
+
+### Application logs
+
+Technical system behavior.
+
+### Audit records
+
+Security/business accountability.
+
+They are not automatically interchangeable.
+
+Future audit requirements must be implemented through controlled domain/audit mechanisms.
+
+---
+
+# 32. SECTION 17 — CONFIGURATION MANAGEMENT
+
+Define configuration principles.
+
+Configuration must:
+
+* be environment-specific;
+* be validated;
+* avoid secrets in source code;
+* fail clearly when mandatory configuration is missing;
+* have documented defaults where safe.
+
+Environment categories:
+
+```text
+LOCAL
+TEST
+DEVELOPMENT
+STAGING
+PRODUCTION
+```
+
+---
+
+# 33. SECTION 18 — SECRETS MANAGEMENT
+
+Secrets must never be committed to Git.
+
+This includes:
+
+* passwords;
+* API keys;
+* tokens;
+* certificates containing private material;
+* private keys;
+* database credentials.
+
+Define:
+
+* `.env.example`;
+* secret-management mechanisms;
+* local-development rules;
+* rotation principles;
+* revocation principles.
+
+A leaked credential must be treated as compromised and rotated rather than merely deleted from the current file.
+
+---
+
+# 34. SECTION 19 — SECURITY DEVELOPMENT
+
+Establish secure-development requirements covering:
+
+* authentication;
+* authorization;
+* input validation;
+* output encoding;
+* session security;
+* access control;
+* cryptographic material;
+* dependency security;
+* secrets;
+* logging;
+* rate limiting;
+* secure defaults;
+* error handling.
+
+Security requirements must align with the KFIN Security & Threat Model.
+
+Do not invent an alternative security architecture here.
+
+---
+
+# 35. CLEARANCE AND AUTHORIZATION PRINCIPLE
+
+The constitution must recognize that KFIN will eventually require more than ordinary application roles.
+
+Future authorization must be capable of considering factors such as:
+
+* identity;
+* role;
+* institutional affiliation;
+* clearance;
+* resource classification;
+* purpose;
+* context;
+* operation;
+* geographic/institutional boundaries where applicable.
+
+The exact authorization model belongs to the approved security architecture.
+
+Do not implement the complete authorization engine in 0.1.
+
+---
+
+# 36. SECTION 20 — PRIVACY AND DATA PROTECTION
+
+Establish privacy principles for future KFIN development.
+
+Require:
+
+* data minimization;
+* purpose limitation;
+* controlled access;
+* appropriate retention;
+* documented processing;
+* controlled disclosure;
+* privacy-aware testing;
+* protection of sensitive information.
+
+The constitution must acknowledge that future KFIN data may include highly sensitive personal and forensic information.
+
+Development must not use real sensitive data without explicit authorization and appropriate controls.
+
+---
+
+# 37. SECTION 21 — FORENSIC INTEGRITY
+
+Establish engineering principles for future forensic data.
+
+Future forensic information must be capable of supporting:
+
+* provenance;
+* integrity;
+* traceability;
+* temporal history;
+* versioning;
+* accountability;
+* controlled modification;
+* historical reconstruction.
+
+A normal CRUD mindset must not be allowed to determine the design of future forensic records.
+
+---
+
+# 38. IMMUTABILITY PRINCIPLE
+
+Where a future record represents historical forensic fact or evidence activity, the system should favor controlled append/history mechanisms rather than destructive overwriting.
+
+The exact implementation must follow the approved domain model, workflow model and data governance model.
+
+---
+
+# 39. SECTION 22 — AUDITABILITY
+
+Future security-sensitive operations should be attributable to:
+
+* authenticated identity;
+* institution;
+* role/authorization context;
+* timestamp;
+* operation;
+* affected resource;
+* outcome;
+* relevant request/correlation information.
+
+Audit mechanisms must themselves be protected against unauthorized modification.
+
+---
+
+# 40. SECTION 23 — TESTING
+
+Define the KFIN testing hierarchy.
+
+At minimum:
+
+```text
+Unit
+ ↓
+Integration
+ ↓
+Contract
+ ↓
+End-to-End
+ ↓
+Security
+ ↓
+Regression
+```
+
+Tests must prove behavior.
+
+Do not create meaningless tests solely for coverage numbers.
+
+---
+
+# 41. TESTING REQUIREMENTS
+
+Every future feature should identify:
+
+* expected behavior;
+* invalid behavior;
+* security behavior;
+* failure behavior;
+* edge cases.
+
+Critical workflows require stronger testing than cosmetic changes.
+
+---
+
+# 42. SECTION 24 — TEST DATA
+
+Development data must normally be synthetic.
+
+Never use real:
+
+* DNA profiles;
+* criminal records;
+* victim data;
+* offender data;
+* evidence records;
+* identity records;
+* sensitive institutional data.
+
+unless specifically authorized under the appropriate governance and security controls.
+
+---
+
+# 43. SYNTHETIC DATA
+
+Synthetic fixtures must be clearly identifiable.
+
+They must not accidentally be mistaken for real forensic records.
+
+---
+
+# 44. SECTION 25 — GIT AND VERSION CONTROL
+
+Define:
+
+* branch strategy;
+* main branch protection;
+* feature branches;
+* pull requests;
+* commit expectations;
+* tags/releases;
+* history preservation.
+
+Git must provide meaningful historical traceability.
+
+---
+
+# 45. COMMIT PRINCIPLES
+
+Commits should represent coherent changes.
+
+Avoid commits such as:
+
+* `stuff`;
+* `changes`;
+* `fix`;
+* `updates`.
+
+Where practical, commits should identify the purpose of the change.
+
+---
+
+# 46. SECTION 26 — CODE REVIEW
+
+Define review expectations.
+
+Review should assess:
+
+* correctness;
+* security;
+* architecture;
+* maintainability;
+* tests;
+* documentation;
+* data implications;
+* authorization implications.
+
+High-risk changes require stronger review.
+
+Examples:
+
+* authorization;
+* identity;
+* database migrations;
+* forensic data;
+* cryptographic functionality;
+* interoperability;
+* audit mechanisms.
+
+---
+
+# 47. SECTION 27 — ADR SYSTEM
+
+Create:
+
+```text
+docs/architecture/adr/
+```
+
+Create:
+
+```text
+docs/architecture/adr/0000-template.md
+```
+
+The ADR template must contain:
+
+```text
+ADR ID
+Title
+Status
+Date
+Decision Makers
+Context
+Problem
+Constraints
+Options Considered
+Decision
+Rationale
+Consequences
+Security Impact
+Data Impact
+Operational Impact
+Alternatives Rejected
+Migration/Transition Considerations
+Related Requirements
+Related ADRs
+```
+
+Not every trivial coding decision requires an ADR.
+
+Architecturally significant decisions do.
+
+---
+
+# 48. ADR STATUS
+
+Support statuses such as:
+
+* Proposed;
+* Accepted;
+* Superseded;
+* Deprecated;
+* Rejected.
+
+Never delete historical ADRs merely because a decision changed.
+
+---
+
+# 49. SECTION 28 — DEPENDENCY GOVERNANCE
+
+Every major dependency must have a justified purpose.
+
+Control:
+
+* version;
+* source;
+* lockfile;
+* vulnerabilities;
+* maintenance status;
+* compatibility;
+* licensing considerations where relevant.
+
+Do not introduce unnecessary dependencies.
+
+---
+
+# 50. DEPENDENCY SECURITY
+
+Dependency vulnerabilities must be:
+
+* detected;
+* classified;
+* documented;
+* remediated;
+* accepted through an explicit risk process when remediation is not immediately possible.
+
+Do not simply suppress vulnerability warnings without justification.
+
+---
+
+# 51. SECTION 29 — DOCUMENTATION
+
+Documentation must be treated as part of the implementation.
+
+Future features must document where appropriate:
+
+* purpose;
+* architecture;
+* APIs;
+* configuration;
+* security implications;
+* operational requirements;
+* testing;
+* known limitations.
+
+Documentation must not claim features that have not been implemented.
+
+---
+
+# 52. DOCUMENTATION ACCURACY
+
+The following rule is mandatory:
+
+> **Documentation is evidence only when it reflects verified system behavior or an explicitly identified design requirement.**
+
+A README saying "DNA matching is operational" does not make DNA matching operational.
+
+---
+
+# 53. SECTION 30 — AI-ASSISTED DEVELOPMENT
+
+This is a critical KFIN requirement.
+
+AI coding agents may be used, but they must operate under controlled instructions.
+
+An AI agent must:
+
+1. identify the current phase;
+2. identify the current sub-phase;
+3. inspect relevant specifications;
+4. inspect existing implementation;
+5. identify dependencies;
+6. implement only authorized scope;
+7. preserve architecture;
+8. avoid inventing requirements;
+9. run relevant tests;
+10. report actual results;
+11. document significant changes;
+12. identify uncertainty.
+
+---
+
+# 54. AI AGENT PROHIBITIONS
+
+An AI agent must not:
+
+* fabricate implementation;
+* fabricate test results;
+* fabricate security compliance;
+* fabricate integrations;
+* fabricate forensic results;
+* silently change architecture;
+* disable tests to obtain a green build;
+* remove security controls to simplify development;
+* insert real sensitive data;
+* invent legal requirements;
+* claim production readiness without evidence.
+
+---
+
+# 55. AI CHANGE CONTROL
+
+When an AI agent identifies a potentially necessary architectural change:
+
+```text
+STOP
+ ↓
+EXPLAIN
+ ↓
+DOCUMENT
+ ↓
+REQUEST/CREATE ADR
+ ↓
+WAIT FOR AUTHORIZATION WHERE REQUIRED
+```
+
+AI must not autonomously redefine KFIN.
+
+---
+
+# 56. SECTION 31 — CHANGE MANAGEMENT
+
+Classify changes as:
+
+### Level 1 — Routine implementation
+
+No architectural impact.
+
+### Level 2 — Significant technical change
+
+Potential cross-component impact.
+
+### Level 3 — Architectural change
+
+Changes system structure, security assumptions, domain boundaries, data architecture or technology direction.
+
+### Level 4 — Critical change
+
+Changes involving areas such as:
+
+* identity;
+* authorization;
+* forensic integrity;
+* DNA data;
+* national interoperability;
+* cryptography;
+* audit;
+* security boundaries.
+
+The governance process should become stricter as change risk increases.
+
+---
+
+# 57. SECTION 32 — VULNERABILITY MANAGEMENT
+
+Define vulnerability handling:
+
+```text
+DISCOVER
+ ↓
+VALIDATE
+ ↓
+CLASSIFY
+ ↓
+ASSESS
+ ↓
+REMEDIATE
+ ↓
+VERIFY
+ ↓
+DOCUMENT
+```
+
+Critical issues must not be hidden because they are inconvenient.
+
+---
+
+# 58. SECTION 33 — FAILURE AND INCIDENT HANDLING
+
+The constitution must define development handling for:
+
+* failed builds;
+* failed migrations;
+* security failures;
+* leaked secrets;
+* dependency vulnerabilities;
+* corrupted development environments;
+* failed deployments;
+* unexpected behavior.
+
+Failure should trigger investigation, not concealment.
+
+---
+
+# 59. SECTION 34 — ENVIRONMENT GOVERNANCE
+
+Define environment separation.
+
+At minimum:
+
+```text
+LOCAL
+TEST
+DEVELOPMENT
+STAGING
+PRODUCTION
+```
+
+Each environment must have controlled configuration.
+
+Production must not depend on undocumented developer machines.
+
+---
+
+# 60. SECTION 35 — CI/CD GOVERNANCE
+
+Future CI must enforce appropriate quality gates.
+
+The constitution must define that CI should be capable of validating:
+
+```text
+FORMAT
+ ↓
+LINT
+ ↓
+TYPE CHECK
+ ↓
+TEST
+ ↓
+BUILD
+ ↓
+SECURITY
+ ↓
+SECRET SCAN
+```
+
+The exact pipeline belongs to 0.3 and later infrastructure phases.
+
+0.1 defines the governance requirement, not the pipeline implementation.
+
+---
+
+# 61. SECTION 36 — OBSERVABILITY
+
+Establish principles for future observability.
+
+The architecture should accommodate:
+
+* structured logs;
+* metrics;
+* traces;
+* health checks;
+* request IDs;
+* correlation IDs;
+* service health;
+* operational alerts.
+
+Observability must not expose sensitive forensic data unnecessarily.
+
+---
+
+# 62. SECTION 37 — ACCESSIBILITY
+
+Establish accessibility as a development requirement.
+
+Future interfaces should consider:
+
+* keyboard navigation;
+* semantic HTML;
+* readable contrast;
+* focus management;
+* accessible forms;
+* screen-reader compatibility;
+* responsive behavior.
+
+Accessibility must be considered during implementation rather than added immediately before release.
+
+---
+
+# 63. SECTION 38 — PERFORMANCE
+
+Define performance principles.
+
+Do not prematurely optimize.
+
+However, developers must avoid clearly dangerous patterns such as:
+
+* unbounded queries;
+* uncontrolled data retrieval;
+* excessive network calls;
+* blocking operations;
+* memory leaks;
+* uncontrolled logging;
+* inefficient repeated computation.
+
+Future high-volume forensic searching and matching workloads will require dedicated performance engineering.
+
+---
+
+# 64. SECTION 39 — RELEASE GOVERNANCE
+
+A future release must not be considered production-ready merely because:
+
+* the application builds;
+* tests pass;
+* the UI looks complete.
+
+Release readiness must eventually consider:
+
+* functional correctness;
+* security;
+* data integrity;
+* performance;
+* observability;
+* documentation;
+* rollback;
+* disaster recovery;
+* operational readiness;
+* governance requirements.
+
+The detailed production gate belongs to later phases.
+
+---
+
+# 65. SECTION 40 — DEFINITION OF DONE
+
+Establish a formal Definition of Done.
+
+A feature should not be considered complete merely because code exists.
+
+Depending on its scope, completion should require:
+
+```text
+Requirement understood
+        ↓
+Architecture aligned
+        ↓
+Implementation complete
+        ↓
+Validation complete
+        ↓
+Tests written/passed
+        ↓
+Security reviewed
+        ↓
+Documentation updated
+        ↓
+Code reviewed
+        ↓
+CI passed
+        ↓
+Acceptance criteria passed
+```
+
+---
+
+# 66. DEFINITION OF DONE — SECURITY-SENSITIVE WORK
+
+For changes involving:
+
+* identity;
+* authorization;
+* forensic records;
+* evidence;
+* DNA;
+* audit;
+* interoperability;
+* cryptography;
+
+the Definition of Done must include appropriate security and architecture review.
+
+---
+
+# 67. SECTION 41 — EXCEPTIONS
+
+Not every rule can be absolute in every technical circumstance.
+
+Create a controlled exception mechanism.
+
+An exception must include:
+
+* rule being bypassed;
+* reason;
+* risk;
+* affected systems;
+* compensating control;
+* owner;
+* approval;
+* expiry/review date.
+
+Temporary exceptions must not become permanent undocumented behavior.
+
+---
+
+# 68. SECTION 42 — ENFORCEMENT
+
+Define how the constitution is enforced.
+
+Enforcement mechanisms may include:
+
+* code review;
+* CI;
+* automated scanning;
+* architecture review;
+* security review;
+* pull-request requirements;
+* audit;
+* phase acceptance gates.
+
+The goal is to convert important principles into enforceable controls wherever practical.
+
+---
+
+# 69. SECTION 43 — GOVERNANCE OWNERSHIP
+
+Define ownership categories without inventing individual names.
+
+Use roles such as:
+
+* Architecture Authority;
+* Engineering Lead;
+* Security Authority;
+* Data Governance Authority;
+* Technical Maintainer;
+* Repository Maintainer;
+* Phase Owner.
+
+If actual organizational ownership has not yet been formally defined, state:
+
+**TBD — governance appointment required.**
+
+Do not invent people or institutions.
+
+---
+
+# 70. SECTION 44 — AMENDMENT PROCEDURE
+
+The constitution must be changeable, but not casually.
+
+A change should require:
+
+1. identify proposed amendment;
+2. explain reason;
+3. assess impact;
+4. assess security implications;
+5. assess data implications;
+6. update documentation;
+7. create ADR where appropriate;
+8. review;
+9. approve;
+10. version the constitution.
+
+---
+
+# 71. SECTION 45 — CONSTITUTION VERSIONING
+
+The constitution must have:
+
+* version number;
+* effective date;
+* status;
+* change history.
+
+Maintain a changelog or revision table.
+
+Never silently rewrite history.
+
+---
+
+# 72. FORENSIC-SPECIFIC DEVELOPMENT PRINCIPLES
+
+The constitution must include a dedicated subsection recognizing that future KFIN development differs from ordinary commercial CRUD applications.
+
+Future implementation must assume that certain information may be:
+
+* legally significant;
+* operationally significant;
+* sensitive;
+* subject to retention requirements;
+* subject to disclosure controls;
+* subject to audit;
+* subject to historical reconstruction.
+
+Therefore:
+
+**Correctness is not merely whether the current UI displays the expected value.**
+
+Correctness may also involve:
+
+* who changed it;
+* when;
+* why;
+* under which authorization;
+* what existed before;
+* what exists now;
+* what evidence supports the change.
+
+---
+
+# 73. CHAIN-OF-CUSTODY DEVELOPMENT PRINCIPLE
+
+The constitution must recognize chain-of-custody requirements as a future domain concern.
+
+Development must not introduce patterns that make it impossible to determine:
+
+```text
+WHO
+ ↓
+POSSESSED
+ ↓
+WHAT
+ ↓
+WHEN
+ ↓
+FROM WHERE
+ ↓
+TO WHERE
+ ↓
+UNDER WHAT AUTHORIZATION
+ ↓
+WITH WHAT RESULT
+```
+
+The detailed workflow belongs to later forensic workflow phases.
+
+---
+
+# 74. PROVENANCE PRINCIPLE
+
+Future KFIN information should have sufficient provenance to establish where information originated and how it was transformed.
+
+Development must avoid uncontrolled transformations that destroy provenance.
+
+---
+
+# 75. TEMPORAL DATA PRINCIPLE
+
+The constitution must recognize that KFIN will eventually require distinction between:
+
+* current state;
+* historical state;
+* event time;
+* system time;
+* effective time;
+* recorded time.
+
+The exact implementation belongs to the approved data architecture.
+
+---
+
+# 76. DATA LINEAGE PRINCIPLE
+
+Future analytical outputs must be capable of being traced back to their source information.
+
+This is particularly important for:
+
+* intelligence;
+* graph analysis;
+* reporting;
+* analytical decision support;
+* future AI-assisted capabilities.
+
+---
+
+# 77. AI AND FORENSIC DECISION PRINCIPLE
+
+The constitution must explicitly prevent uncontrolled AI automation in sensitive forensic decision-making.
+
+AI-generated output must not automatically become:
+
+* forensic fact;
+* legal conclusion;
+* investigative conclusion;
+* DNA interpretation;
+* evidence determination.
+
+Future AI features must have explicit governance, explainability and human oversight appropriate to their use.
+
+---
+
+# 78. INTEROPERABILITY PRINCIPLE
+
+Future KFIN integrations must use controlled contracts.
+
+No institution should gain unrestricted database-level access merely because systems need to exchange information.
+
+Future exchange should consider:
+
+* identity;
+* authorization;
+* purpose;
+* data classification;
+* schema;
+* provenance;
+* validation;
+* audit;
+* rate limits;
+* failure;
+* replay;
+* versioning.
+
+---
+
+# 79. NATIONAL-SCALE PRINCIPLE
+
+The constitution must acknowledge that KFIN is intended to evolve toward a national-scale ecosystem.
+
+Therefore development should avoid assumptions that:
+
+* only one institution will use the system;
+* only one user type exists;
+* all users have the same clearance;
+* all data has the same classification;
+* all integrations are trusted equally;
+* all workloads are small.
+
+---
+
+# 80. MULTI-INSTITUTION PRINCIPLE
+
+Future architecture must recognize institutional boundaries.
+
+A user may belong to:
+
+* a forensic laboratory;
+* law enforcement;
+* another authorized government institution;
+* a participating partner organization;
+* an administrative authority.
+
+The exact institutions and authorization policies must come from the approved KFIN specifications.
+
+Do not invent institutional permissions.
+
+---
+
+# 81. SECURITY BOUNDARY PRINCIPLE
+
+The constitution must require developers to identify trust boundaries when designing future features.
+
+For a new feature, consider:
+
+```text
+USER
+ ↓
+IDENTITY
+ ↓
+AUTHORIZATION
+ ↓
+APPLICATION
+ ↓
+DOMAIN
+ ↓
+DATABASE
+ ↓
+EXTERNAL SYSTEM
+```
+
+Where trust changes, security controls must be explicit.
+
+---
+
+# 82. DATA CLASSIFICATION PRINCIPLE
+
+The constitution must establish that future KFIN information will require classification.
+
+Examples may include:
+
+* public;
+* internal;
+* sensitive;
+* restricted;
+* highly restricted.
+
+However, **do not invent the final official classification taxonomy** if it is already defined elsewhere.
+
+The constitution must defer to the approved Data Governance and Security specifications.
+
+---
+
+# 83. SEPARATION OF DEVELOPMENT AND PRODUCTION
+
+Development must never become an accidental production environment.
+
+Developers should not directly modify production systems outside approved operational procedures.
+
+Future production access must be:
+
+* authorized;
+* logged;
+* controlled;
+* limited.
+
+---
+
+# 84. BACKUP AND RECOVERY PRINCIPLE
+
+Although full disaster-recovery implementation belongs to later phases, the constitution must recognize:
+
+* backups must be governed;
+* recovery must be tested;
+* critical information must not depend on a single uncontrolled copy;
+* restoration must preserve integrity;
+* recovery actions must be auditable.
+
+---
+
+# 85. MIGRATION SAFETY PRINCIPLE
+
+Future migrations involving sensitive or critical data must consider:
+
+* backup;
+* compatibility;
+* rollback;
+* validation;
+* downtime;
+* integrity;
+* audit;
+* versioning.
+
+---
+
+# 86. THIRD-PARTY SERVICE PRINCIPLE
+
+External services must not automatically be treated as trusted.
+
+Before integrating an external service, future implementation should assess:
+
+* data transmitted;
+* authentication;
+* authorization;
+* availability;
+* security;
+* privacy;
+* contractual requirements;
+* failure behavior;
+* dependency risk.
+
+---
+
+# 87. OPEN-SOURCE PRINCIPLE
+
+Open-source software may be used where appropriate, but:
+
+* dependencies must be identified;
+* licenses considered;
+* security assessed;
+* maintenance considered;
+* unnecessary dependencies avoided.
+
+---
+
+# 88. DEVELOPMENT ENVIRONMENT PRINCIPLE
+
+The project must strive toward:
+
+```text
+CLONE
+ ↓
+INSTALL
+ ↓
+CONFIGURE
+ ↓
+MIGRATE
+ ↓
+RUN
+ ↓
+TEST
+```
+
+without undocumented manual intervention.
+
+---
+
+# 89. REPRODUCIBILITY PRINCIPLE
+
+A developer should not be required to know private project history to reproduce the development environment.
+
+The repository and documentation should contain the necessary information.
+
+---
+
+# 90. NO KNOWLEDGE-LOSS PRINCIPLE
+
+Important decisions must not exist exclusively in:
+
+* private messages;
+* individual memory;
+* temporary AI sessions;
+* undocumented meetings.
+
+If a decision matters to KFIN, capture it in the project documentation.
+
+---
+
+# 91. SECURITY-OVER-CONVENIENCE PRINCIPLE
+
+When convenience conflicts with a mandatory security control, convenience does not override the control.
+
+Any exception must use the formal exception process.
+
+---
+
+# 92. IMPLEMENTATION AGENT BEHAVIOR
+
+During execution of this sub-phase, the agent must:
+
+### BEFORE EDITING
+
+* inspect repository;
+* inspect existing documentation;
+* inspect KFIN specifications;
+* identify existing governance documents;
+* identify conflicts.
+
+### DURING IMPLEMENTATION
+
+* preserve existing useful information;
+* avoid duplication;
+* use authoritative terminology;
+* document new decisions;
+* avoid inventing missing organizational facts.
+
+### AFTER IMPLEMENTATION
+
+* validate all required sections;
+* verify links/references;
+* inspect document consistency;
+* verify no contradictions;
+* run applicable documentation checks;
+* produce completion evidence.
+
+---
+
+# 93. DO NOT INVENT
+
+The implementation agent must not invent:
+
+* government organizational structures;
+* legal requirements;
+* institutional mandates;
+* clearance levels;
+* named officials;
+* compliance certifications;
+* production capabilities;
+* security certifications;
+* data classifications;
+* operational policies.
+
+If information is not defined:
+
+```text
+TBD
+```
+
+or
+
+```text
+TO BE FORMALLY DEFINED
+```
+
+must be used where appropriate.
+
+---
+
+# 94. DO NOT SILENTLY RECONCILE
+
+If two authoritative documents disagree, do not silently merge them.
+
+Example:
+
+If one document says:
+
+```text
+Role-based authorization
+```
+
+and another establishes:
+
+```text
+Role + clearance + contextual authorization
+```
+
+do not casually choose one.
+
+Record the discrepancy and follow the approved architectural authority/change process.
+
+---
+
+# 95. DOCUMENT CONSISTENCY AUDIT
+
+After drafting the constitution, inspect it for contradictions.
+
+Examples:
+
+* security principle contradicting developer convenience;
+* immutable-record principle contradicting destructive updates;
+* least privilege contradicting broad default permissions;
+* privacy principle contradicting excessive logging;
+* AI rules contradicting architecture authority.
+
+Resolve inconsistencies through explicit governance.
+
+---
+
+# 96. REQUIRED CONSTITUTION METADATA
+
+The constitution must begin with metadata similar to:
+
+```text
+Document:
+KFIN Development Constitution
+
+Document ID:
+KFIN-GOV-001
+
+Version:
+0.1.0
+
+Status:
+Draft / Approved
+
+Effective Date:
+YYYY-MM-DD
+
+Owner:
+TBD / Approved Governance Role
+
+Classification:
+Use the approved KFIN classification
+
+Supersedes:
+N/A
+
+Related Documents:
+KFIN Master Specification
+Phase 0 Master Prompt
+Security & Threat Model
+Data Governance Specification
+Technical Architecture Specification
+```
+
+Do not invent the final classification if it has not yet been approved.
+
+---
+
+# 97. CONSTITUTION REVISION HISTORY
+
+Include a revision table:
+
+| Version | Date       | Change                 | Author/Role | Approval |
+| ------- | ---------- | ---------------------- | ----------- | -------- |
+| 0.1.0   | YYYY-MM-DD | Initial implementation | TBD         | TBD      |
+
+Update it whenever the constitution changes.
+
+---
+
+# 98. 0.1 DELIVERABLES
+
+The mandatory deliverables are:
+
+### Primary
+
+```text
+docs/governance/KFIN-DEVELOPMENT-CONSTITUTION.md
+```
+
+### Architecture Governance
+
+```text
+docs/architecture/adr/0000-template.md
+```
+
+### Optional supporting artifacts
+
+Create only where useful:
+
+```text
+docs/governance/
+docs/development/
+docs/architecture/
+```
+
+---
+
+# 99. 0.1 TRACEABILITY MATRIX
+
+Create a traceability record showing how the 0.1 requirements are represented.
+
+At minimum:
+
+| Requirement             | Constitution Section   | Artifact     | Status |
+| ----------------------- | ---------------------- | ------------ | ------ |
+| Architectural authority | Architecture Authority | Constitution |        |
+| Security by design      | Engineering Principles | Constitution |        |
+| Privacy by design       | Privacy                | Constitution |        |
+| Forensic integrity      | Forensic Integrity     | Constitution |        |
+| AI governance           | AI Development         | Constitution |        |
+| Testing                 | Testing                | Constitution |        |
+| ADRs                    | ADR System             | ADR template |        |
+| Change management       | Change Management      | Constitution |        |
+| Definition of Done      | Definition of Done     | Constitution |        |
+
+Expand the matrix as necessary.
+
+---
+
+# 100. 0.1 QUALITY CHECK
+
+Before declaring 0.1 complete, verify that the constitution:
+
+* is internally consistent;
+* reflects KFIN's national-scale nature;
+* reflects forensic sensitivity;
+* recognizes legal/accountability implications without inventing law;
+* addresses security;
+* addresses privacy;
+* addresses auditability;
+* addresses provenance;
+* addresses temporal information;
+* addresses AI;
+* addresses interoperability;
+* addresses development governance;
+* addresses change control;
+* addresses testing;
+* addresses documentation;
+* addresses Git;
+* addresses dependencies;
+* addresses environments;
+* establishes Definition of Done.
+
+---
+
+# 101. 0.1 ACCEPTANCE GATE
+
+0.1 passes only when every mandatory category is satisfied.
+
+## A. Governance
+
+PASS only if:
+
+* purpose exists;
+* scope exists;
+* governance ownership is defined or marked TBD;
+* amendment procedure exists;
+* versioning exists.
+
+## B. Architecture
+
+PASS only if:
+
+* authority hierarchy exists;
+* conflict resolution exists;
+* ADR mechanism exists;
+* traceability exists.
+
+## C. Engineering
+
+PASS only if:
+
+* coding standards exist;
+* naming exists;
+* type safety exists;
+* architecture boundaries exist;
+* database rules exist;
+* API rules exist.
+
+## D. Security
+
+PASS only if:
+
+* security principles exist;
+* secrets rules exist;
+* vulnerability management exists;
+* authorization principles exist;
+* trust boundaries are recognized.
+
+## E. Data
+
+PASS only if:
+
+* privacy exists;
+* classification principle exists;
+* provenance exists;
+* temporal data principle exists;
+* forensic integrity exists;
+* test-data rules exist.
+
+## F. Quality
+
+PASS only if:
+
+* testing rules exist;
+* code review exists;
+* Definition of Done exists;
+* CI governance exists.
+
+## G. AI
+
+PASS only if:
+
+* AI development rules exist;
+* AI prohibitions exist;
+* AI architectural authority is defined;
+* false-success prevention exists.
+
+## H. Operations
+
+PASS only if:
+
+* environment governance exists;
+* failure handling exists;
+* release governance exists;
+* observability principles exist.
+
+---
+
+# 102. FAILURE CONDITIONS
+
+Mark 0.1 as **FAIL** if:
+
+* the constitution is only a generic coding guide;
+* KFIN-specific concerns are missing;
+* architectural authority is undefined;
+* AI agents can silently change architecture;
+* security is treated as a later-phase concern;
+* forensic integrity is ignored;
+* privacy is ignored;
+* requirements cannot be traced;
+* major decisions are allowed to remain undocumented;
+* sensitive development data is permitted without controls;
+* exceptions have no governance;
+* documentation falsely claims implemented functionality;
+* existing authoritative architecture is contradicted without an ADR;
+* the Definition of Done is missing.
+
+---
+
+# 103. FINAL 0.1 SELF-AUDIT
+
+Perform a final question-based audit.
+
+Answer:
+
+### Architecture
+
+1. Can a developer determine which document has authority?
+2. Can architectural conflicts be resolved without guesswork?
+3. Can significant decisions be recorded?
+
+### Security
+
+4. Are secrets controlled?
+5. Are trust boundaries recognized?
+6. Is least privilege established?
+7. Can security-sensitive changes receive stronger review?
+
+### Data
+
+8. Is sensitive data protected?
+9. Is synthetic data required during development?
+10. Are provenance and integrity recognized?
+
+### Forensics
+
+11. Does the constitution recognize that forensic records differ from ordinary CRUD?
+12. Does it recognize historical reconstruction?
+13. Does it recognize chain-of-custody requirements?
+
+### AI
+
+14. Can an AI agent silently change architecture?
+15. Can an AI agent fabricate test results?
+16. Are AI-generated changes subject to the same engineering standards?
+
+The answer to questions 14 and 15 must be:
+
+**NO.**
+
+### Quality
+
+17. Is there a Definition of Done?
+18. Is testing governed?
+19. Is code review governed?
+20. Is CI governance defined?
+
+### Traceability
+
+21. Can requirements be traced from discovery to implementation?
+22. Can future developers understand why a major requirement exists?
+
+If any critical answer is NO:
+
+**0.1 must not pass.**
+
+---
+
+# 104. 0.1 COMPLETION REPORT
+
+Create:
+
+```text
+docs/development/PHASE-0.1-COMPLETION-REPORT.md
+```
+
+The report must contain:
+
+## 104.1 Executive Summary
+
+What was established.
+
+## 104.2 Documents Created
+
+List all files.
+
+## 104.3 Documents Modified
+
+List all modified files.
+
+## 104.4 Governance Decisions
+
+List significant decisions.
+
+## 104.5 ADRs
+
+List ADRs created.
+
+## 104.6 Requirements
+
+List requirement IDs and statuses.
+
+## 104.7 Conflicts Found
+
+Document any architectural/document conflicts.
+
+## 104.8 Conflicts Resolved
+
+Document resolutions.
+
+## 104.9 Deferred Items
+
+Document unresolved matters.
+
+## 104.10 Validation
+
+Describe validation performed.
+
+## 104.11 Known Risks
+
+Document remaining risks.
+
+## 104.12 Acceptance Gate
+
+```text
+PASS
+```
+
+or
+
+```text
+FAIL
+```
+
+Do not use "COMPLETE" if mandatory acceptance criteria have not passed.
+
+---
+
+# 105. 0.1 EXIT CONDITION
+
+0.1 is complete only when:
+
+```text
+Development Constitution
+        +
+ADR Foundation
+        +
+Governance Rules
+        +
+Traceability Rules
+        +
+AI Governance
+        +
+Security Principles
+        +
+Privacy Principles
+        +
+Forensic Integrity Principles
+        +
+Definition of Done
+        +
+Completion Report
+        ↓
+0.1 ACCEPTANCE GATE
+        ↓
+PASS
+```
+
+Only after 0.1 passes may implementation proceed to:
+
+# SUB-PHASE 0.2 — REPOSITORY & MONOREPO FOUNDATION
+
+---
+
+# 106. STRICT STOP CONDITION
+
+When the 0.1 acceptance gate passes:
+
+**STOP.**
+
+Do not automatically implement:
+
+* repository restructuring;
+* frontend scaffolding;
+* backend scaffolding;
+* database migrations;
+* CI;
+* automated security scanning;
+* application modules.
+
+Those belong to **0.2 and 0.3**.
+
+---
+
+# 107. FINAL RULE
+
+The most important objective of 0.1 is not the number of pages produced.
+
+It is whether KFIN now possesses a **single, authoritative, version-controlled development constitution** capable of governing the project as it grows from an initial software repository into a complex national forensic information ecosystem.
+
+The constitution must make it difficult for future implementation to:
+
+* lose requirements;
+* bypass security;
+* silently change architecture;
+* destroy provenance;
+* misuse sensitive data;
+* create undocumented dependencies;
+* allow AI agents to invent system behavior;
+* declare incomplete work complete.
+
+If a rule is important enough to protect KFIN, it must be documented, traceable and enforceable where technically possible.
+
+# END OF KFIN SUB-PHASE 0.1 MASTER IMPLEMENTATION PROMPT

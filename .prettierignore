@@ -1,0 +1,8 @@
+node_modules
+dist
+build
+.cache
+.local
+.git
+attached_assets
+.conversation

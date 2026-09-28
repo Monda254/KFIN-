@@ -1,0 +1,50 @@
+name: Phase 0 Quality Gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-gate:
+    name: Mandatory Quality Gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify code formatting
+        run: pnpm run format:check
+
+      - name: Run TypeScript type checking
+        run: pnpm run typecheck
+
+      - name: Run foundation tests
+        run: pnpm run test
+
+      - name: Run production build
+        run: pnpm run build
+
+      - name: Run secret scanning
+        run: pnpm run security:secrets
+
+      - name: Run dependency security audit
+        run: pnpm run security:dependencies
