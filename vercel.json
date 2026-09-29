@@ -3,7 +3,6 @@
   "framework": "vite",
   "buildCommand": "pnpm --filter @workspace/kfin-console run build",
   "outputDirectory": "artifacts/kfin-console/dist/public",
-  "installCommand": "pnpm install --frozen-lockfile",
   "rewrites": [
     {
       "source": "/(.*)",
