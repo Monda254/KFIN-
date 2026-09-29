@@ -1,0 +1,10 @@
+{
+  "system": "Kenya Forensic Intelligence Network (KFIN)",
+  "environment": "test",
+  "mockPayloadId": "SYNTH-001-ALPHA",
+  "timestamp": "2026-09-29T12:00:00.000Z",
+  "metadata": {
+    "classification": "SYNTHETIC_TEST_DATA",
+    "containsRealForensicData": false
+  }
+}

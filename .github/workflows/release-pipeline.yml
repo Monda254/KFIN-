@@ -1,0 +1,68 @@
+name: Release Pipeline Foundation
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Semantic Version Tag (e.g., v0.3.0)'
+        required: true
+        type: string
+      environment:
+        description: 'Target Environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production-dry-run
+
+permissions:
+  contents: read
+
+jobs:
+  release-validation:
+    name: Release Gate & Artifact Packaging
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.29.3
+
+      - name: Install dependencies (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Full Quality, Security, and Contract Validation
+        run: pnpm run validate
+
+      - name: Verify Clean Working Directory
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Working directory contains uncommitted changes!"
+            git status
+            exit 1
+          fi
+
+      - name: Packaging Build Bundles
+        run: |
+          mkdir -p release-bundle
+          tar -czf release-bundle/api-server-${{ inputs.release_tag }}.tar.gz -C artifacts/api-server dist package.json
+          tar -czf release-bundle/kfin-console-${{ inputs.release_tag }}.tar.gz -C artifacts/kfin-console dist package.json
+
+      - name: Security Check - Fail Closed on Production Deployment Attempt
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            echo "ERROR: Production deployment is unauthorized during Phase 0 foundation!"
+            echo "Refer to Phase 0.3 Master Implementation Prompt Requirement 60."
+            exit 1
+          fi
+          echo "Release verification passed for ${{ inputs.release_tag }} in ${{ inputs.environment }} mode."

@@ -1,19 +1,21 @@
-name: Phase 0 Quality Gates
+name: Pull Request CI Pipeline
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: pr-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  quality-gate:
-    name: Mandatory Quality Gates
+  validate:
+    name: PR Quality & Security Validation Gate
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,25 +28,10 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 12
+          version: 10.29.3
 
-      - name: Install dependencies
+      - name: Install dependencies (frozen lockfile)
         run: pnpm install --frozen-lockfile
 
-      - name: Verify code formatting
-        run: pnpm run format:check
-
-      - name: Run TypeScript type checking
-        run: pnpm run typecheck
-
-      - name: Run foundation tests
-        run: pnpm run test
-
-      - name: Run production build
-        run: pnpm run build
-
-      - name: Run secret scanning
-        run: pnpm run security:secrets
-
-      - name: Run dependency security audit
-        run: pnpm run security:dependencies
+      - name: Run Full Quality & Security Gate
+        run: pnpm run validate

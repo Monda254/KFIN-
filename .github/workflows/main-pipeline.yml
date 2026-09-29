@@ -1,0 +1,57 @@
+name: Main Branch Integration Pipeline
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: main-branch-integration
+  cancel-in-progress: false
+
+jobs:
+  integration-verification:
+    name: Full Integration & Artifact Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.29.3
+
+      - name: Install dependencies (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Execute Full Quality, Test & Security Suite
+        run: pnpm run validate
+
+      - name: Verify Monorepo Build Artifacts
+        run: |
+          test -f artifacts/api-server/dist/index.mjs
+          test -f artifacts/kfin-console/dist/public/index.html
+          echo "Build artifacts verified for commit: ${{ github.sha }}"
+
+      - name: Generate Build Metadata
+        run: |
+          mkdir -p .build-metadata
+          cat <<EOF > .build-metadata/build-info.json
+          {
+            "commit": "${{ github.sha }}",
+            "ref": "${{ github.ref }}",
+            "timestamp": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
+            "runner": "ubuntu-latest",
+            "nodeVersion": "24",
+            "phase": "0.3"
+          }
+          EOF

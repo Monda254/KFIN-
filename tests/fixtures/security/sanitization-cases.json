@@ -1,0 +1,23 @@
+{
+  "description": "Synthetic input vectors for validating input sanitizers and parsers",
+  "cases": [
+    {
+      "id": "SEC-CASE-01",
+      "name": "SQL Metacharacter Injection",
+      "input": "'; DROP TABLE test_mock; --",
+      "expectedHandling": "parameterized_query_or_rejection"
+    },
+    {
+      "id": "SEC-CASE-02",
+      "name": "Cross-Site Scripting Probe",
+      "input": "<script>alert('kfin-test')</script>",
+      "expectedHandling": "escaped_or_sanitized"
+    },
+    {
+      "id": "SEC-CASE-03",
+      "name": "Path Traversal Probe",
+      "input": "../../../../etc/passwd",
+      "expectedHandling": "path_normalization_rejection"
+    }
+  ]
+}
