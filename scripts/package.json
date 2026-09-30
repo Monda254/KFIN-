@@ -15,6 +15,9 @@
     "clean": "tsx ./src/clean.ts",
     "test": "tsx ./src/foundation-test.ts",
     "db:check": "tsx ./src/db-check.ts",
+    "db:seed": "tsx ./src/seed.ts",
+    "migrate": "tsx ./src/migrate.ts",
+    "db:test": "tsx ./src/db-test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

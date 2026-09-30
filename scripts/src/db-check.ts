@@ -32,6 +32,19 @@ async function main() {
     `);
     console.log("Installed Extensions:", extRes.rows);
 
+    // Query all public tables
+    const tablesRes = await pool.query(`
+      SELECT table_name 
+      FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      ORDER BY table_name;
+    `);
+    console.log(`\nActive Public Tables (${tablesRes.rows.length}):`);
+    for (const t of tablesRes.rows) {
+      console.log(`  - ${t.table_name}`);
+    }
+
+
 
   } catch (err: any) {
     console.error("❌ Database connection error:", err.message);

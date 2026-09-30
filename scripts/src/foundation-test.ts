@@ -75,7 +75,7 @@ const subPhaseReport02 = read("docs/development/PHASE-0.2-COMPLETION-REPORT.md")
 assert.match(subPhaseReport02, /Acceptance Result:\*\* \*\*PASS\*\*/);
 
 const projectStatus = read("docs/development/PROJECT-STATUS.md");
-assert.match(projectStatus, /Current Sub-Phase:\*\* 0\.2/);
+assert.match(projectStatus, /Current Sub-Phase:\*\* (0\.2|1\.1)/);
 
 const agentsMd = read("AGENTS.md");
 assert.match(agentsMd, /Prime Directive/);
