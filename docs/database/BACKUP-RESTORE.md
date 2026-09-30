@@ -90,7 +90,7 @@ Supabase provides automated, multi-zone WAL replication ensuring microsecond-lev
    ```
 4. **Execute Database Integrity Suite:**
    ```bash
-   DATABASE_URL="postgresql://postgres:pass@localhost:5432/kfin_restore_verification" \
+   DATABASE_URL="postgresql://postgres:postgres@localhost:5432/kfin_restore_verification" \
    pnpm --filter @workspace/scripts run db:test
    ```
 5. **Verify Row Counts & Ledgers:**
