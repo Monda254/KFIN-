@@ -14,7 +14,11 @@
     "e2e-smoke": "tsx ./src/e2e-smoke.ts",
     "clean": "tsx ./src/clean.ts",
     "test": "tsx ./src/foundation-test.ts",
+    "db:check": "tsx ./src/db-check.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@workspace/db": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",
