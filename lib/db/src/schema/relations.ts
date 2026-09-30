@@ -7,8 +7,22 @@ import {
   userRoles,
   permissions,
   rolePermissions,
+  userSessions,
+  mfaFactors,
+  serviceIdentities,
+  temporaryAccessGrants,
+  breakGlassEvents,
+  passwordHistories,
 } from "./identity";
-import { cases, caseParticipants, caseNotes, caseStatusHistory } from "./cases";
+import {
+  cases,
+  caseParticipants,
+  caseNotes,
+  caseStatusHistory,
+  caseAssignments,
+  caseTransfers,
+  caseLinks,
+} from "./cases";
 import { storageLocations, evidenceItems, custodyTransfers } from "./evidence";
 import {
   biologicalSamples,
@@ -112,14 +126,104 @@ export const casesRelations = relations(cases, ({ one, many }) => ({
   leadInvestigator: one(users, {
     fields: [cases.leadInvestigatorId],
     references: [users.id],
+    relationName: "leadInvestigator",
+  }),
+  closedBy: one(users, {
+    fields: [cases.closedById],
+    references: [users.id],
+    relationName: "caseClosedBy",
+  }),
+  reopenedBy: one(users, {
+    fields: [cases.reopenedById],
+    references: [users.id],
+    relationName: "caseReopenedBy",
   }),
   participants: many(caseParticipants),
+  assignments: many(caseAssignments),
+  transfers: many(caseTransfers),
   notes: many(caseNotes),
   evidenceItems: many(evidenceItems),
   statusHistory: many(caseStatusHistory),
   labSubmissions: many(labSubmissions),
   dataDisclosures: many(dataDisclosures),
   legalHolds: many(legalHolds),
+  outgoingLinks: many(caseLinks, { relationName: "sourceCase" }),
+  incomingLinks: many(caseLinks, { relationName: "targetCase" }),
+}));
+
+export const caseAssignmentsRelations = relations(caseAssignments, ({ one }) => ({
+  case: one(cases, {
+    fields: [caseAssignments.caseId],
+    references: [cases.id],
+  }),
+  user: one(users, {
+    fields: [caseAssignments.userId],
+    references: [users.id],
+    relationName: "assignedUser",
+  }),
+  organization: one(organizations, {
+    fields: [caseAssignments.organizationId],
+    references: [organizations.id],
+  }),
+  assignedBy: one(users, {
+    fields: [caseAssignments.assignedById],
+    references: [users.id],
+    relationName: "assigner",
+  }),
+  revokedBy: one(users, {
+    fields: [caseAssignments.revokedById],
+    references: [users.id],
+    relationName: "revoker",
+  }),
+}));
+
+export const caseTransfersRelations = relations(caseTransfers, ({ one }) => ({
+  case: one(cases, {
+    fields: [caseTransfers.caseId],
+    references: [cases.id],
+  }),
+  fromOrg: one(organizations, {
+    fields: [caseTransfers.fromOrgId],
+    references: [organizations.id],
+    relationName: "fromOrg",
+  }),
+  toOrg: one(organizations, {
+    fields: [caseTransfers.toOrgId],
+    references: [organizations.id],
+    relationName: "toOrg",
+  }),
+  fromInvestigator: one(users, {
+    fields: [caseTransfers.fromInvestigatorId],
+    references: [users.id],
+    relationName: "fromInvestigator",
+  }),
+  toInvestigator: one(users, {
+    fields: [caseTransfers.toInvestigatorId],
+    references: [users.id],
+    relationName: "toInvestigator",
+  }),
+  transferredBy: one(users, {
+    fields: [caseTransfers.transferredById],
+    references: [users.id],
+    relationName: "transferAuthorizer",
+  }),
+}));
+
+export const caseLinksRelations = relations(caseLinks, ({ one }) => ({
+  sourceCase: one(cases, {
+    fields: [caseLinks.sourceCaseId],
+    references: [cases.id],
+    relationName: "sourceCase",
+  }),
+  targetCase: one(cases, {
+    fields: [caseLinks.targetCaseId],
+    references: [cases.id],
+    relationName: "targetCase",
+  }),
+  createdBy: one(users, {
+    fields: [caseLinks.createdById],
+    references: [users.id],
+  }),
 }));
 
 export const caseParticipantsRelations = relations(caseParticipants, ({ one }) => ({
@@ -378,3 +482,62 @@ export const legalHoldsRelations = relations(legalHolds, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export const userSessionsRelations = relations(userSessions, ({ one }) => ({
+  user: one(users, {
+    fields: [userSessions.userId],
+    references: [users.id],
+  }),
+}));
+
+export const mfaFactorsRelations = relations(mfaFactors, ({ one }) => ({
+  user: one(users, {
+    fields: [mfaFactors.userId],
+    references: [users.id],
+  }),
+}));
+
+export const serviceIdentitiesRelations = relations(serviceIdentities, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [serviceIdentities.organizationId],
+    references: [organizations.id],
+  }),
+  clearanceLevel: one(clearanceLevels, {
+    fields: [serviceIdentities.clearanceLevelId],
+    references: [clearanceLevels.id],
+  }),
+  createdBy: one(users, {
+    fields: [serviceIdentities.createdById],
+    references: [users.id],
+  }),
+}));
+
+export const temporaryAccessGrantsRelations = relations(temporaryAccessGrants, ({ one }) => ({
+  user: one(users, {
+    fields: [temporaryAccessGrants.userId],
+    references: [users.id],
+  }),
+  grantedBy: one(users, {
+    fields: [temporaryAccessGrants.grantedById],
+    references: [users.id],
+  }),
+}));
+
+export const breakGlassEventsRelations = relations(breakGlassEvents, ({ one }) => ({
+  user: one(users, {
+    fields: [breakGlassEvents.userId],
+    references: [users.id],
+  }),
+  reviewedBy: one(users, {
+    fields: [breakGlassEvents.reviewedById],
+    references: [users.id],
+  }),
+}));
+
+export const passwordHistoriesRelations = relations(passwordHistories, ({ one }) => ({
+  user: one(users, {
+    fields: [passwordHistories.userId],
+    references: [users.id],
+  }),
+}));
+

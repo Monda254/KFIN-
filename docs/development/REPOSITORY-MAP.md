@@ -33,14 +33,17 @@ This document defines the structural architecture of the KFIN repository, explai
 - `lib/api-spec/`: Authoritative OpenAPI specification (`openapi.yaml`) and Orval code-generation configuration.
 - `lib/api-zod/`: Generated Zod schemas guaranteeing runtime request/response validation against the OpenAPI spec.
 - `lib/api-client-react/`: Generated TanStack Query React hooks consumed by the frontend console.
-- `lib/db/`: Drizzle ORM client, connection pooling, and schema definitions. Intentionally empty of business tables in Phase 0.
+- `lib/db/`: Drizzle ORM client, connection pooling, and schema definitions. Implements Phase 1.1 domain tables, Phase 1.2 identity/access tables, and Phase 1.3 case management tables (`case_assignments`, `case_transfers`, `case_links`).
+- `lib/security/`: Core security, identity, authentication and access-control library (`@workspace/security`). Implements scrypt hashing, RFC 6238 TOTP, JWT & refresh token management, 38-permission matrix, centralized ABAC/RBAC authorization engine with separation-of-duties and break-glass elevation, federation claim mapping, and security audit logging.
+- `lib/case-domain/`: Core Case Management domain package (`@workspace/case-domain`). Implements the Case aggregate root, deterministic finite state machine (`CaseStateMachine`), authoritative case numbering, domain event dispatch, transactional repository, and field-level minimization service.
 
 ### `database/`
-- `database/migrations/`: Canonical location for version-controlled SQL migrations.
-- `database/seeds/`: Controlled synthetic reference data seeds for local development.
+- `database/migrations/`: Canonical location for version-controlled SQL migrations (`0000`, `0001`, `0002`).
+- `database/seeds/`: Controlled synthetic reference data seeds for local development (`seed.ts`).
 - `database/fixtures/`: Synthetic test fixtures for automated testing.
 
 ### `docs/`
+- `docs/cases/`: Canonical Case Domain architecture, lifecycle progression, state machine, access control, relationships, REST API, domain events, and forensic audit specifications.
 - `docs/governance/`: Constitutional engineering rules, Definition of Done, AI rules, and Change Management.
 - `docs/architecture/`: Technical architecture documentation, monorepo boundaries, and ADR records.
 - `docs/development/`: Developer onboarding, project status, repository maps, and setup guides.

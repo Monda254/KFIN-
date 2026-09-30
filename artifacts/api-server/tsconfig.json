@@ -13,6 +13,12 @@
       "path": "../../lib/db"
     },
     {
+      "path": "../../lib/security"
+    },
+    {
+      "path": "../../lib/case-domain"
+    },
+    {
       "path": "../../lib/api-zod"
     }
   ]

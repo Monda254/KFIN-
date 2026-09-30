@@ -18,10 +18,14 @@
     "db:seed": "tsx ./src/seed.ts",
     "migrate": "tsx ./src/migrate.ts",
     "db:test": "tsx ./src/db-test.ts",
+    "security:test": "tsx ./src/security-test.ts",
+    "case:test": "tsx ./src/case-test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@workspace/db": "workspace:*"
+    "@workspace/db": "workspace:*",
+    "@workspace/security": "workspace:*",
+    "@workspace/case-domain": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",

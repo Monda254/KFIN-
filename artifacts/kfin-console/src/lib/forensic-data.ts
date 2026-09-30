@@ -15,6 +15,60 @@ export interface DatabaseStatus {
   };
 }
 
+export interface CaseAssignmentInfo {
+  id: string;
+  userName: string;
+  userBadge: string;
+  role: string;
+  orgName: string;
+  assignedAt: string;
+  isActive: boolean;
+}
+
+export interface CaseTransferInfo {
+  id: string;
+  fromOrg: string;
+  toOrg: string;
+  fromOfficer: string;
+  toOfficer: string;
+  reason: string;
+  timestamp: string;
+  authRef?: string;
+}
+
+export interface CaseTimelineItem {
+  id: string;
+  timestamp: string;
+  eventType: string;
+  summary: string;
+  actor: string;
+}
+
+export interface CaseParticipantInfo {
+  id: string;
+  participantType: string;
+  pseudonym?: string;
+  classification: string;
+  demographics?: Record<string, any>;
+}
+
+export interface CaseNoteInfo {
+  id: string;
+  authorName: string;
+  authorBadge: string;
+  noteText: string;
+  isConfidential: boolean;
+  createdAt: string;
+}
+
+export interface CaseLinkInfo {
+  id: string;
+  targetCaseNumber: string;
+  targetTitle: string;
+  linkType: string;
+  notes?: string;
+}
+
 export interface CaseItem {
   id: string;
   case_number: string;
@@ -22,16 +76,29 @@ export interface CaseItem {
   description: string;
   status: string;
   priority: string;
+  case_type?: string;
+  data_classification?: string;
+  version?: number;
   incident_date: string;
   incident_county: string;
   incident_location_coords?: string;
   created_at: string;
+  closed_at?: string;
+  closure_reason?: string;
+  reopened_at?: string;
+  reopened_reason?: string;
   originating_org_name: string;
   originating_org_code: string;
   lead_investigator_name: string;
   lead_investigator_badge: string;
   evidence_count: number;
   participant_count: number;
+  assignments?: CaseAssignmentInfo[];
+  transfers?: CaseTransferInfo[];
+  timeline?: CaseTimelineItem[];
+  participants?: CaseParticipantInfo[];
+  notes?: CaseNoteInfo[];
+  links?: CaseLinkInfo[];
 }
 
 export interface EvidenceItem {
@@ -175,9 +242,12 @@ export const initialCases: CaseItem[] = [
     id: "case-001",
     case_number: "KFIN-SYN-CASE-2026-0001",
     title: "Synthetic Forensic Demonstration Case 001",
-    description: "Synthetic homicide investigation evidence demonstration with multi-exhibit recovery.",
+    description: "Synthetic homicide investigation evidence demonstration with multi-exhibit recovery and multi-agency response.",
     status: "ACTIVE",
     priority: "CRITICAL",
+    case_type: "CRIMINAL_INVESTIGATION",
+    data_classification: "RESTRICTED",
+    version: 3,
     incident_date: "2026-09-25T08:30:00Z",
     incident_county: "Nairobi",
     incident_location_coords: "-1.286389,36.817223",
@@ -188,6 +258,134 @@ export const initialCases: CaseItem[] = [
     lead_investigator_badge: "KFIN-OFF-003",
     evidence_count: 2,
     participant_count: 3,
+    assignments: [
+      {
+        id: "asgn-001",
+        userName: "Insp. Grace Wanjiku (Synthetic)",
+        userBadge: "KFIN-OFF-003",
+        role: "PRIMARY_INVESTIGATOR",
+        orgName: "DCI Headquarters Forensic Services",
+        assignedAt: "2026-09-25T10:00:00Z",
+        isActive: true,
+      },
+      {
+        id: "asgn-002",
+        userName: "Sgt. Peter Ochieng (Synthetic)",
+        userBadge: "KFIN-OFF-002",
+        role: "EXAMINER",
+        orgName: "DCI Headquarters Forensic Services",
+        assignedAt: "2026-09-25T11:30:00Z",
+        isActive: true,
+      },
+      {
+        id: "asgn-003",
+        userName: "Dr. Amani Kiprop (Synthetic)",
+        userBadge: "KFIN-OFF-001",
+        role: "FORENSIC_ANALYST",
+        orgName: "National Public Health Reference Lab",
+        assignedAt: "2026-09-26T08:00:00Z",
+        isActive: true,
+      },
+    ],
+    transfers: [
+      {
+        id: "trf-001",
+        fromOrg: "DCI Headquarters Forensic Services",
+        toOrg: "DCI Homicide Specialized Section",
+        fromOfficer: "Insp. Grace Wanjiku",
+        toOfficer: "Insp. Grace Wanjiku",
+        reason: "Escalation to specialized forensic division following touch DNA extraction",
+        timestamp: "2026-09-26T12:00:00Z",
+        authRef: "DCI-DIR-AUTH-2026-881",
+      },
+    ],
+    timeline: [
+      {
+        id: "tl-001",
+        timestamp: "2026-09-25T10:00:00Z",
+        eventType: "CASE_CREATED",
+        summary: "Case initialized in OPEN state with priority CRITICAL",
+        actor: "Insp. Grace Wanjiku (KFIN-OFF-003)",
+      },
+      {
+        id: "tl-002",
+        timestamp: "2026-09-25T10:05:00Z",
+        eventType: "ASSIGNMENT_GRANTED",
+        summary: "Primary investigator assignment established",
+        actor: "Director Amina Hassan (KFIN-OFF-000)",
+      },
+      {
+        id: "tl-003",
+        timestamp: "2026-09-25T10:30:00Z",
+        eventType: "STATUS_CHANGE",
+        summary: "Status transitioned: OPEN -> ACTIVE (Investigation operationalized)",
+        actor: "Insp. Grace Wanjiku (KFIN-OFF-003)",
+      },
+      {
+        id: "tl-004",
+        timestamp: "2026-09-26T09:00:00Z",
+        eventType: "EVIDENCE_COLLECTED",
+        summary: "Exhibits EVD-001 & EVD-002 logged into chain-of-custody ledger",
+        actor: "Sgt. Kiprono Cheruiyot (KFIN-OFF-004)",
+      },
+      {
+        id: "tl-005",
+        timestamp: "2026-09-26T16:00:00Z",
+        eventType: "DNA_MATCH_CONFIRMED",
+        summary: "CODIS 20 STR profile confirmed match against Convicted Offender Index",
+        actor: "Dr. Amani Kiprop (KFIN-OFF-001)",
+      },
+    ],
+    participants: [
+      {
+        id: "part-001",
+        participantType: "VICTIM",
+        pseudonym: "SYN-VICTIM-01",
+        classification: "CONFIDENTIAL",
+        demographics: { age: 34, gender: "F" },
+      },
+      {
+        id: "part-002",
+        participantType: "SUSPECT",
+        pseudonym: "SYN-SUSPECT-A",
+        classification: "RESTRICTED",
+        demographics: { age: 29, gender: "M" },
+      },
+      {
+        id: "part-003",
+        participantType: "ELIMINATION_SUBJECT",
+        pseudonym: "SYN-RESIDENT-01",
+        classification: "INTERNAL",
+        demographics: { status: "Co-tenant" },
+      },
+    ],
+    notes: [
+      {
+        id: "note-001",
+        authorName: "Insp. Grace Wanjiku",
+        authorBadge: "KFIN-OFF-003",
+        noteText: "Initial scene reconstruction completed. Multi-surface latent prints recovered alongside biological stains.",
+        isConfidential: false,
+        createdAt: "2026-09-25T11:00:00Z",
+      },
+      {
+        id: "note-002",
+        authorName: "Insp. Grace Wanjiku",
+        authorBadge: "KFIN-OFF-003",
+        noteText: "Confidential intelligence: Informant K-91 indicated suspect movement towards Thika corridor.",
+        isConfidential: true,
+        createdAt: "2026-09-25T14:30:00Z",
+      },
+    ],
+    links: [
+      {
+        id: "link-001",
+        targetCaseNumber: "KFIN-SYN-CASE-2026-0002",
+        targetTitle: "Mombasa Maritime Seizure & Trace Investigation",
+        linkType: "RELATED",
+        notes: "Shared contraband serial batch prefix identified across crime scene logistics",
+      },
+    ],
   },
   {
     id: "case-002",
@@ -196,6 +394,9 @@ export const initialCases: CaseItem[] = [
     description: "Synthetic maritime seizure with touch DNA recovery on contraband cargo seals.",
     status: "OPEN",
     priority: "EXPEDITED",
+    case_type: "CRIMINAL_INVESTIGATION",
+    data_classification: "RESTRICTED",
+    version: 1,
     incident_date: "2026-09-26T14:15:00Z",
     incident_county: "Mombasa",
     incident_location_coords: "-4.043477,39.668206",
@@ -206,6 +407,53 @@ export const initialCases: CaseItem[] = [
     lead_investigator_badge: "KFIN-OFF-003",
     evidence_count: 1,
     participant_count: 1,
+    assignments: [
+      {
+        id: "asgn-004",
+        userName: "Insp. Grace Wanjiku (Synthetic)",
+        userBadge: "KFIN-OFF-003",
+        role: "PRIMARY_INVESTIGATOR",
+        orgName: "DCI Headquarters Forensic Services",
+        assignedAt: "2026-09-26T15:00:00Z",
+        isActive: true,
+      },
+    ],
+    timeline: [
+      {
+        id: "tl-006",
+        timestamp: "2026-09-26T15:00:00Z",
+        eventType: "CASE_CREATED",
+        summary: "Case opened under maritime jurisdiction reference",
+        actor: "Insp. Grace Wanjiku (KFIN-OFF-003)",
+      },
+    ],
+    participants: [
+      {
+        id: "part-004",
+        participantType: "WITNESS",
+        pseudonym: "SYN-CREW-01",
+        classification: "RESTRICTED",
+      },
+    ],
+    notes: [
+      {
+        id: "note-003",
+        authorName: "Insp. Grace Wanjiku",
+        authorBadge: "KFIN-OFF-003",
+        noteText: "Port container seals retrieved under chain-of-custody. Submitted for trace DNA extraction.",
+        isConfidential: false,
+        createdAt: "2026-09-26T16:00:00Z",
+      },
+    ],
+    links: [
+      {
+        id: "link-002",
+        targetCaseNumber: "KFIN-SYN-CASE-2026-0001",
+        targetTitle: "Synthetic Forensic Demonstration Case 001",
+        linkType: "RELATED",
+        notes: "Shared contraband logistics pattern",
+      },
+    ],
   },
   {
     id: "case-003",
@@ -214,6 +462,9 @@ export const initialCases: CaseItem[] = [
     description: "Synthetic disaster victim identification matching inquiry with familial reference collection.",
     status: "ACTIVE",
     priority: "PRIORITY",
+    case_type: "DISASTER_VICTIM_IDENTIFICATION",
+    data_classification: "CONFIDENTIAL",
+    version: 2,
     incident_date: "2026-09-27T11:00:00Z",
     incident_county: "Nakuru",
     incident_location_coords: "-0.303099,36.080025",
@@ -224,6 +475,47 @@ export const initialCases: CaseItem[] = [
     lead_investigator_badge: "KFIN-OFF-003",
     evidence_count: 1,
     participant_count: 2,
+    assignments: [
+      {
+        id: "asgn-005",
+        userName: "Insp. Grace Wanjiku (Synthetic)",
+        userBadge: "KFIN-OFF-003",
+        role: "PRIMARY_INVESTIGATOR",
+        orgName: "DCI Headquarters Forensic Services",
+        assignedAt: "2026-09-27T12:00:00Z",
+        isActive: true,
+      },
+    ],
+    timeline: [
+      {
+        id: "tl-007",
+        timestamp: "2026-09-27T12:00:00Z",
+        eventType: "CASE_CREATED",
+        summary: "DVI inquiry opened with familial buccal swabs requested",
+        actor: "Insp. Grace Wanjiku (KFIN-OFF-003)",
+      },
+      {
+        id: "tl-008",
+        timestamp: "2026-09-27T12:30:00Z",
+        eventType: "STATUS_CHANGE",
+        summary: "Status transitioned: OPEN -> ACTIVE",
+        actor: "Insp. Grace Wanjiku (KFIN-OFF-003)",
+      },
+    ],
+    participants: [
+      {
+        id: "part-005",
+        participantType: "MISSING_PERSON",
+        pseudonym: "SYN-VICTIM-DVI-01",
+        classification: "CONFIDENTIAL",
+      },
+      {
+        id: "part-006",
+        participantType: "ELIMINATION_SUBJECT",
+        pseudonym: "SYN-RELATIVE-01",
+        classification: "CONFIDENTIAL",
+      },
+    ],
   },
 ];
 

@@ -488,7 +488,7 @@ function DatabaseView() {
 }
 
 // -----------------------------------------------------------------------------
-// 2. View: Forensic Cases Docket
+// 2. View: Forensic Cases Docket & Aggregates
 // -----------------------------------------------------------------------------
 function CasesView() {
   const { data: caseList = initialCases } = useQuery<CaseItem[]>({
@@ -506,99 +506,413 @@ function CasesView() {
   });
 
   const [selectedCase, setSelectedCase] = useState<CaseItem | null>(caseList[0] || null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'assignments' | 'transfers' | 'participants' | 'timeline' | 'notes' | 'links'>('overview');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [typeFilter, setTypeFilter] = useState('ALL');
+
+  const filteredCases = caseList.filter((c) => {
+    const matchesSearch =
+      c.case_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.incident_county.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'ALL' || c.status === statusFilter;
+    const matchesType = typeFilter === 'ALL' || (c.case_type || 'CRIMINAL_INVESTIGATION') === typeFilter;
+    return matchesSearch && matchesStatus && matchesType;
+  });
+
+  const currentCase = selectedCase || filteredCases[0] || null;
 
   return (
     <div>
       <SectionHeading
-        eyebrow="Active Investigation Dockets"
+        eyebrow="Active Investigation Dockets & Aggregate Roots"
         title="Forensic Case File Registry"
-        detail="Master registry of criminal investigations, disaster victim identification inquiries, and biological exhibit collections."
+        detail="Master operational backbone connecting crime incidents, multi-agency investigator assignments, evidentiary exhibits, chain-of-custody transfers, and chronological audit timelines."
       />
+
+      {/* Top Aggregate Stat Tiles */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+        <StatTile
+          label="Registered Dockets"
+          value={caseList.length}
+          detail="100% Synthetic test dockets"
+          accent="gold"
+          icon={FolderTree}
+        />
+        <StatTile
+          label="Active Status"
+          value={caseList.filter((c) => c.status === 'ACTIVE').length}
+          detail="Under active examination"
+          accent="emerald"
+          icon={Activity}
+        />
+        <StatTile
+          label="Personnel Assignments"
+          value={caseList.reduce((acc, c) => acc + (c.assignments?.length || 1), 0)}
+          detail="Separation of duties enforced"
+          accent="cyan"
+          icon={Users}
+        />
+        <StatTile
+          label="Agency Transfers"
+          value={caseList.reduce((acc, c) => acc + (c.transfers?.length || 0), 0)}
+          detail="Preserved historical lineage"
+          accent="purple"
+          icon={GitBranch}
+        />
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Case List Column */}
         <div className="lg:col-span-1 space-y-3">
-          <div className="flex items-center justify-between pb-2">
-            <span className="font-mono text-xs uppercase text-slate-400 font-semibold">Registered Dockets ({caseList.length})</span>
-            <span className="text-xs text-[#d5a33a] font-mono">100% SYNTHETIC</span>
-          </div>
-          {caseList.map((c) => {
-            const isSelected = selectedCase?.id === c.id;
-            return (
-              <div
-                key={c.id}
-                onClick={() => setSelectedCase(c)}
-                className={cn(
-                  'cursor-pointer rounded-xl border p-4 transition-all duration-200 text-left',
-                  isSelected
-                    ? 'border-[#d5a33a] bg-slate-900 shadow-md ring-1 ring-[#d5a33a]/30'
-                    : 'border-slate-800 bg-slate-900/40 hover:border-slate-700 hover:bg-slate-900/70',
-                )}
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3 space-y-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-500" />
+              <input
+                type="text"
+                placeholder="Search number, title, county..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-lg border border-slate-800 bg-slate-950/80 py-2 pl-9 pr-3 text-xs text-slate-200 placeholder-slate-500 focus:border-[#d5a33a] focus:outline-none"
+              />
+            </div>
+            <div className="flex gap-2 text-xs">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-1/2 rounded-lg border border-slate-800 bg-slate-950/80 px-2 py-1.5 text-slate-300 focus:border-[#d5a33a] focus:outline-none"
               >
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-[#d5a33a]">{c.case_number}</span>
-                  <StatusBadge status={c.status} />
+                <option value="ALL">All Statuses</option>
+                <option value="DRAFT">DRAFT</option>
+                <option value="OPEN">OPEN</option>
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="SUSPENDED">SUSPENDED</option>
+                <option value="CLOSED">CLOSED</option>
+                <option value="REOPENED">REOPENED</option>
+              </select>
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="w-1/2 rounded-lg border border-slate-800 bg-slate-950/80 px-2 py-1.5 text-slate-300 focus:border-[#d5a33a] focus:outline-none"
+              >
+                <option value="ALL">All Types</option>
+                <option value="CRIMINAL_INVESTIGATION">Criminal</option>
+                <option value="DISASTER_VICTIM_IDENTIFICATION">DVI</option>
+                <option value="UNIDENTIFIED_REMAINS">Remains</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between px-1">
+            <span className="font-mono text-xs uppercase text-slate-400 font-semibold">
+              Cases ({filteredCases.length})
+            </span>
+            <span className="text-[10px] text-[#d5a33a] font-mono tracking-wider">KFIN-SYN-% VERIFIED</span>
+          </div>
+
+          <div className="space-y-2.5 max-h-[680px] overflow-y-auto pr-1">
+            {filteredCases.map((c) => {
+              const isSelected = currentCase?.id === c.id;
+              return (
+                <div
+                  key={c.id}
+                  onClick={() => setSelectedCase(c)}
+                  className={cn(
+                    'cursor-pointer rounded-xl border p-4 transition-all duration-200 text-left',
+                    isSelected
+                      ? 'border-[#d5a33a] bg-slate-900 shadow-md ring-1 ring-[#d5a33a]/30'
+                      : 'border-slate-800 bg-slate-900/40 hover:border-slate-700 hover:bg-slate-900/70',
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-[#d5a33a]">{c.case_number}</span>
+                    <StatusBadge status={c.status} />
+                  </div>
+                  <h3 className="mt-2 text-sm font-semibold text-slate-200 line-clamp-1">{c.title}</h3>
+                  <p className="mt-1 text-xs text-slate-400 line-clamp-2">{c.description}</p>
+                  <div className="mt-3 flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                    <span>{c.incident_county}</span>
+                    <span className="text-amber-400/90 font-semibold">{c.priority}</span>
+                  </div>
                 </div>
-                <h3 className="mt-2 text-sm font-semibold text-slate-200 line-clamp-1">{c.title}</h3>
-                <p className="mt-1 text-xs text-slate-400 line-clamp-2">{c.description}</p>
-                <div className="mt-3 flex items-center justify-between text-[11px] text-slate-500 font-mono">
-                  <span>{c.incident_county}</span>
-                  <span className="text-amber-400/90 font-semibold">{c.priority}</span>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
 
-        {/* Case Details Drawer */}
+        {/* Case Details Drawer & Tabs */}
         <div className="lg:col-span-2">
-          {selectedCase ? (
-            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6">
+          {currentCase ? (
+            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-6">
+              {/* Header */}
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
                 <div>
-                  <span className="font-mono text-xs font-bold text-[#d5a33a]">{selectedCase.case_number}</span>
-                  <h2 className="text-xl font-bold text-slate-100 mt-1">{selectedCase.title}</h2>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-bold text-[#d5a33a]">{currentCase.case_number}</span>
+                    <span className="text-[10px] font-mono rounded bg-slate-800 px-1.5 py-0.5 text-slate-400">
+                      v{currentCase.version || 1}
+                    </span>
+                    <span className="text-[10px] font-mono rounded border border-rose-500/30 bg-rose-950/30 px-1.5 py-0.5 text-rose-400">
+                      {currentCase.data_classification || 'RESTRICTED'}
+                    </span>
+                  </div>
+                  <h2 className="text-xl font-bold text-slate-100 mt-1">{currentCase.title}</h2>
                 </div>
                 <div className="flex items-center gap-2">
-                  <StatusBadge status={selectedCase.priority} />
-                  <StatusBadge status={selectedCase.status} />
+                  <StatusBadge status={currentCase.priority} />
+                  <StatusBadge status={currentCase.status} />
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-4 sm:grid-cols-2 text-xs">
-                <div>
-                  <span className="text-slate-500 font-mono uppercase">Incident County</span>
-                  <p className="text-slate-200 font-medium mt-0.5">{selectedCase.incident_county}</p>
-                </div>
-                <div>
-                  <span className="text-slate-500 font-mono uppercase">Lead Investigator</span>
-                  <p className="text-slate-200 font-medium mt-0.5">{selectedCase.lead_investigator_name} ({selectedCase.lead_investigator_badge})</p>
-                </div>
-                <div>
-                  <span className="text-slate-500 font-mono uppercase">Originating Agency</span>
-                  <p className="text-slate-200 font-medium mt-0.5">{selectedCase.originating_org_name}</p>
-                </div>
-                <div>
-                  <span className="text-slate-500 font-mono uppercase">Incident Date</span>
-                  <p className="text-slate-200 font-medium mt-0.5">{new Date(selectedCase.incident_date).toLocaleDateString()}</p>
-                </div>
+              {/* Navigation Tabs */}
+              <div className="flex border-b border-slate-800 space-x-1 overflow-x-auto pb-1 text-xs">
+                {(
+                  [
+                    { id: 'overview', label: 'Overview', icon: BookOpen },
+                    { id: 'assignments', label: `Personnel (${currentCase.assignments?.length || 1})`, icon: Users },
+                    { id: 'transfers', label: `Transfers (${currentCase.transfers?.length || 0})`, icon: GitBranch },
+                    { id: 'participants', label: `Roster (${currentCase.participants?.length || 0})`, icon: UserCheck },
+                    { id: 'timeline', label: `Timeline (${currentCase.timeline?.length || 0})`, icon: Clock },
+                    { id: 'notes', label: `Notes (${currentCase.notes?.length || 0})`, icon: FileText },
+                    { id: 'links', label: `Links (${currentCase.links?.length || 0})`, icon: Waypoints },
+                  ] as const
+                ).map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={cn(
+                        'flex items-center gap-1.5 rounded-lg px-3 py-2 font-medium transition-colors whitespace-nowrap',
+                        activeTab === tab.id
+                          ? 'bg-[#d5a33a]/15 text-[#d5a33a]'
+                          : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200',
+                      )}
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                      {tab.label}
+                    </button>
+                  );
+                })}
               </div>
 
-              <div className="mt-6 border-t border-slate-800 pt-5">
-                <span className="text-slate-500 font-mono text-xs uppercase">Investigation Brief</span>
-                <p className="mt-1 text-sm text-slate-300 leading-relaxed">{selectedCase.description}</p>
-              </div>
-
-              <div className="mt-6 border-t border-slate-800 pt-5">
-                <h4 className="text-xs font-mono uppercase text-slate-400 font-bold mb-3">Case Exhibits & Biological Evidence</h4>
-                <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-3 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-emerald-400 font-bold">EVD-001 (Bloodstain Swab)</span>
-                    <span className="font-mono text-slate-400">SEAL-KE-849201</span>
+              {/* Tab: Overview */}
+              {activeTab === 'overview' && (
+                <div className="space-y-6">
+                  <div className="grid gap-4 sm:grid-cols-2 text-xs">
+                    <div className="rounded-lg border border-slate-800/80 bg-slate-950/40 p-3">
+                      <span className="text-slate-500 font-mono uppercase text-[10px]">Incident County & Coordinates</span>
+                      <p className="text-slate-200 font-medium mt-1">{currentCase.incident_county}</p>
+                      <p className="text-slate-500 font-mono text-[11px] mt-0.5">{currentCase.incident_location_coords || 'Spatial Coords Protected'}</p>
+                    </div>
+                    <div className="rounded-lg border border-slate-800/80 bg-slate-950/40 p-3">
+                      <span className="text-slate-500 font-mono uppercase text-[10px]">Lead Investigator</span>
+                      <p className="text-slate-200 font-medium mt-1">{currentCase.lead_investigator_name}</p>
+                      <p className="text-slate-500 font-mono text-[11px] mt-0.5">Badge: {currentCase.lead_investigator_badge}</p>
+                    </div>
+                    <div className="rounded-lg border border-slate-800/80 bg-slate-950/40 p-3">
+                      <span className="text-slate-500 font-mono uppercase text-[10px]">Originating Agency</span>
+                      <p className="text-slate-200 font-medium mt-1">{currentCase.originating_org_name}</p>
+                      <p className="text-slate-500 font-mono text-[11px] mt-0.5">{currentCase.originating_org_code}</p>
+                    </div>
+                    <div className="rounded-lg border border-slate-800/80 bg-slate-950/40 p-3">
+                      <span className="text-slate-500 font-mono uppercase text-[10px]">Incident Date & Registered</span>
+                      <p className="text-slate-200 font-medium mt-1">{new Date(currentCase.incident_date).toLocaleString()}</p>
+                      <p className="text-slate-500 font-mono text-[11px] mt-0.5">Registered: {new Date(currentCase.created_at).toLocaleDateString()}</p>
+                    </div>
                   </div>
-                  <p className="text-slate-400 mt-1">Submitted to National Forensic Biology Lab. STR DNA profile obtained.</p>
+
+                  <div>
+                    <span className="text-slate-500 font-mono text-[10px] uppercase">Investigation Synopsis</span>
+                    <p className="mt-1 text-sm text-slate-300 leading-relaxed rounded-lg border border-slate-800 bg-slate-950/40 p-3.5">
+                      {currentCase.description}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-xs font-mono uppercase text-slate-400 font-bold mb-2">Registered Exhibits & Samples</h4>
+                    <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-3 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-emerald-400 font-bold">EVD-001 (Bloodstain Swab)</span>
+                        <span className="font-mono text-slate-400">SEAL-KE-849201</span>
+                      </div>
+                      <p className="text-slate-400 mt-1">Submitted to National Forensic Biology Lab. STR DNA profile obtained.</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Tab: Assignments */}
+              {activeTab === 'assignments' && (
+                <div className="space-y-3">
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Formal multi-agency personnel assignments. Separation of duties prevents forensic analysts from reviewing their own submissions.
+                  </p>
+                  <div className="space-y-2">
+                    {(currentCase.assignments || []).map((asgn) => (
+                      <div key={asgn.id} className="rounded-lg border border-slate-800 bg-slate-950/40 p-3.5 flex items-center justify-between text-xs">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-slate-200">{asgn.userName}</span>
+                            <span className="font-mono text-[10px] text-slate-400">{asgn.userBadge}</span>
+                            <span className="rounded bg-slate-800 px-2 py-0.5 text-[10px] font-mono text-[#d5a33a] font-semibold">
+                              {asgn.role}
+                            </span>
+                          </div>
+                          <p className="text-slate-400 mt-1">{asgn.orgName}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className="rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 text-[10px] font-semibold">
+                            ACTIVE
+                          </span>
+                          <p className="text-[10px] text-slate-500 font-mono mt-1">
+                            {new Date(asgn.assignedAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tab: Transfers */}
+              {activeTab === 'transfers' && (
+                <div className="space-y-3">
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Immutable transfer records preserving jurisdiction and organizational lineage without destructive data loss.
+                  </p>
+                  {(currentCase.transfers || []).length === 0 ? (
+                    <div className="p-6 text-center text-xs text-slate-500 border border-dashed border-slate-800 rounded-lg">
+                      No inter-agency transfers recorded. Case remains with originating institution.
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {currentCase.transfers?.map((trf) => (
+                        <div key={trf.id} className="rounded-lg border border-slate-800 bg-slate-950/40 p-3.5 text-xs space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="font-mono text-[#d5a33a] font-semibold">{trf.fromOrg} ➔ {trf.toOrg}</span>
+                            <span className="font-mono text-[10px] text-slate-500">{new Date(trf.timestamp).toLocaleString()}</span>
+                          </div>
+                          <p className="text-slate-300 font-medium">Reason: {trf.reason}</p>
+                          {trf.authRef && (
+                            <p className="font-mono text-[10px] text-slate-400">Auth Ref: {trf.authRef}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Tab: Participants */}
+              {activeTab === 'participants' && (
+                <div className="space-y-3">
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Persons of interest, victims, witnesses, and elimination subjects. Roster records are strictly decoupled from investigating officers.
+                  </p>
+                  <div className="space-y-2">
+                    {(currentCase.participants || []).map((part) => (
+                      <div key={part.id} className="rounded-lg border border-slate-800 bg-slate-950/40 p-3.5 flex items-center justify-between text-xs">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono font-bold text-slate-200">{part.pseudonym || 'Confidential Participant'}</span>
+                            <span className="rounded bg-slate-800 px-2 py-0.5 text-[10px] font-mono text-purple-300">
+                              {part.participantType}
+                            </span>
+                          </div>
+                        </div>
+                        <span className="rounded border border-amber-500/30 bg-amber-950/30 text-amber-300 px-2 py-0.5 text-[10px] font-mono">
+                          {part.classification}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tab: Timeline */}
+              {activeTab === 'timeline' && (
+                <div className="space-y-3">
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Chronological lifecycle event reconstruction synthesized from state transitions, assignments, exhibits, and immutable audit logs.
+                  </p>
+                  <div className="relative pl-6 space-y-4 border-l border-slate-800 ml-2">
+                    {(currentCase.timeline || []).map((ev) => (
+                      <div key={ev.id} className="relative text-xs">
+                        <div className="absolute -left-[31px] top-1 h-3 w-3 rounded-full border-2 border-[#d5a33a] bg-slate-950" />
+                        <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
+                          <span className="text-[#d5a33a] font-semibold">{ev.eventType}</span>
+                          <span>{new Date(ev.timestamp).toLocaleString()}</span>
+                        </div>
+                        <p className="text-slate-200 mt-1 font-medium">{ev.summary}</p>
+                        <p className="text-slate-500 text-[10px] font-mono mt-0.5">Actor: {ev.actor}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tab: Notes */}
+              {activeTab === 'notes' && (
+                <div className="space-y-3">
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Investigative journal entries. Confidential intelligence notes are restricted to cleared officers.
+                  </p>
+                  <div className="space-y-2">
+                    {(currentCase.notes || []).map((note) => (
+                      <div key={note.id} className="rounded-lg border border-slate-800 bg-slate-950/40 p-3.5 text-xs space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-slate-200">{note.authorName}</span>
+                            <span className="font-mono text-[10px] text-slate-500">({note.authorBadge})</span>
+                          </div>
+                          {note.isConfidential ? (
+                            <span className="rounded border border-rose-500/30 bg-rose-950/40 text-rose-400 text-[10px] font-mono font-semibold px-2 py-0.5">
+                              CONFIDENTIAL INTEL
+                            </span>
+                          ) : (
+                            <span className="rounded bg-slate-800 text-slate-400 text-[10px] font-mono px-2 py-0.5">
+                              STANDARD NOTE
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-slate-300 leading-relaxed">{note.noteText}</p>
+                        <span className="text-[10px] text-slate-500 font-mono">{new Date(note.createdAt).toLocaleString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tab: Links */}
+              {activeTab === 'links' && (
+                <div className="space-y-3">
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Cross-case links identifying related criminal patterns, co-defendants, or duplicate investigation candidates without destructive merging.
+                  </p>
+                  {(currentCase.links || []).length === 0 ? (
+                    <div className="p-6 text-center text-xs text-slate-500 border border-dashed border-slate-800 rounded-lg">
+                      No linked cases registered for this docket.
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {currentCase.links?.map((lnk) => (
+                        <div key={lnk.id} className="rounded-lg border border-slate-800 bg-slate-950/40 p-3.5 text-xs space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-mono font-bold text-[#d5a33a]">{lnk.targetCaseNumber}</span>
+                            <span className="rounded bg-slate-800 px-2 py-0.5 font-mono text-[10px] text-cyan-400 font-semibold">
+                              {lnk.linkType}
+                            </span>
+                          </div>
+                          <p className="text-slate-200 font-medium">{lnk.targetTitle}</p>
+                          {lnk.notes && <p className="text-slate-400 text-xs mt-1">{lnk.notes}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex h-64 items-center justify-center rounded-xl border border-dashed border-slate-800 text-slate-500">

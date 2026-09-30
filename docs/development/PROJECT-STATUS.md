@@ -3,11 +3,10 @@
 **Current Date:** 2026-09-30  
 **Project:** Kenya Forensic Intelligence Network (KFIN)  
 **Parent Phase:** Phase 1 — Core System Implementation Foundation  
-**Current Sub-Phase:** 1.1 — Database & Persistence Implementation [COMPLETE ✅]  
-**Next Sub-Phase:** 1.2 — Identity, Authentication & Access Control [READY FOR EXECUTION 🚀]  
-**Preceding Phase:** Phase 0 — Development Foundation (0.1 PASS, 0.2 PASS, 0.3 PASS)  
-**Historical Milestone:** Completed `**Current Sub-Phase:** 0.2` and Sub-Phase 0.3 Quality Automation  
-**Production Status:** PERSISTENCE FOUNDATION OPERATIONAL (PostgreSQL 17 + PostGIS on Supabase)  
+**Current Sub-Phase:** 1.3 — Core Domain & Case Management Foundation [COMPLETE ✅]  
+**Next Sub-Phase:** 1.4 — Evidence & Chain-of-Custody Foundation [READY FOR EXECUTION 🚀]  
+**Preceding Sub-Phases:** Phase 1.1 (Database & Persistence) & Phase 1.2 (Identity & Access Control) [COMPLETE ✅]  
+**Operational Status:** CASE DOMAIN & AGGREGATE ROOT OPERATIONAL (19/19 Case Acceptance Tests Passing)  
 
 ---
 
@@ -21,9 +20,9 @@ Phase 0: Development Foundation [COMPLETE ✅]
          ↓
 Phase 1: Core System Implementation Foundation [IN PROGRESS 🚀]
 ├── 1.1 Database & Persistence Implementation [COMPLETE ✅ - 2026-09-30]
-├── 1.2 Identity, Authentication & Access Control [NEXT TARGET]
-├── 1.3 Core Domain & Case Management [DEPENDS ON 1.2]
-├── 1.4 Evidence & Chain-of-Custody Management [DEPENDS ON 1.3]
+├── 1.2 Identity, Authentication & Access Control [COMPLETE ✅ - 2026-09-30]
+├── 1.3 Core Domain & Case Management [COMPLETE ✅ - 2026-09-30]
+├── 1.4 Evidence & Chain-of-Custody Management [NEXT TARGET 🚀]
 ├── 1.5 National DNA Indices & DNA Matching Engine [DEPENDS ON 1.4]
 ├── 1.6 Laboratory & Forensic Examination Workflows [DEPENDS ON 1.5]
 ├── 1.7 Audit, Provenance, Governance & Compliance Enforcement [DEPENDS ON 1.6]
@@ -34,41 +33,36 @@ Phase 2: Advanced KFIN Capabilities [LOCKED]
 
 ---
 
-## 2. Sub-Phase 0.2 Accomplishments
+## 2. Sub-Phase 1.3 Accomplishments (Core Domain & Case Management)
 
-1. **Repository Structure:** Enforced clean pnpm monorepo architecture with explicit boundaries separating runnable applications (`artifacts/`), shared libraries (`lib/`), future independently deployed services (`services/`), future applications (`apps/`), database tooling (`database/`), and repository scripts (`scripts/`).
-2. **Development Conventions:** Configured `.editorconfig`, `.gitattributes`, `.nvmrc`, and role-based `.github/CODEOWNERS`.
-3. **Onboarding & Contribution Documentation:** Established canonical [GETTING-STARTED.md](file:///c:/Users/User/Downloads/KFIN-Foundation-main/KFIN-Foundation-main/docs/development/GETTING-STARTED.md), [CONTRIBUTING.md](file:///c:/Users/User/Downloads/KFIN-Foundation-main/KFIN-Foundation-main/CONTRIBUTING.md), [SECURITY.md](file:///c:/Users/User/Downloads/KFIN-Foundation-main/KFIN-Foundation-main/SECURITY.md), [REPOSITORY-MAP.md](file:///c:/Users/User/Downloads/KFIN-Foundation-main/KFIN-Foundation-main/docs/development/REPOSITORY-MAP.md), and [docs/architecture/README.md](file:///c:/Users/User/Downloads/KFIN-Foundation-main/KFIN-Foundation-main/docs/architecture/README.md).
-4. **AI Coding Agent Rules:** Established binding operational rules in [AGENTS.md](file:///c:/Users/User/Downloads/KFIN-Foundation-main/KFIN-Foundation-main/AGENTS.md).
-5. **Database & API Boundaries:** Structured `database/migrations/`, `database/seeds/`, and `database/fixtures/` with explicit synthetic data requirements and zero domain tables.
-
----
-
-## 3. Deferred Work & Non-Goals in Phase 0
-
-The following operational capabilities are strictly locked and deferred to future authorized phases:
-- DNA profile indexing, STR allele storage, and DNA matching algorithms (Phase 4)
-- Case management workflows and state machines (Phase 1 & 2)
-- Physical evidence tracking and chain-of-custody transfer records (Phase 2)
-- Laboratory specimen processing and analytical instrument integration (Phase 3)
-- Missing persons and unidentified human remains indices (Phase 4 & 5)
-- Graph analytics and investigative intelligence querying (Phase 5)
-- Production identity federation, clearance enforcement, and RBAC/ABAC access control (Phase 1)
-- Production database schema migrations and production deployment infrastructure (Phase 0.3 / Phase 1)
+1. **Case Aggregate Root:** Engineered `@workspace/case-domain` providing authoritative transactional consistency, optimistic concurrency control (`expectedVersion`), domain events, and state invariants.
+2. **Deterministic State Machine:** Implemented `CaseStateMachine` enforcing topological lifecycles (`DRAFT`, `OPEN`, `ACTIVE`, `SUSPENDED`, `CLOSED`, `REOPENED`, `ARCHIVED`) and automated closure preconditions (evidence secured, active lab examinations finalized, no legal holds).
+3. **Personnel Assignments & Multi-Agency Roster:** Implemented non-destructive assignment of investigators and analysts across statutory institutional boundaries (`DCI-HQ`, `NPHL-LAB`, `ODPP-HQ`) with explicit separation from crime participants.
+4. **Inter-Agency Transfers:** Implemented immutable `case_transfers` ledger preserving jurisdictional provenance and chain of operational responsibility under the Kenya Evidence Act.
+5. **Decoupled Participant Roster:** Decoupled persons of interest (`case_participants`) from state personnel, supporting protective pseudonyms and witness classifications.
+6. **Journal Notes & Confidentiality:** Provided investigative journal entries with confidentiality segregation for sensitive intelligence.
+7. **Non-Destructive Cross-Linking:** Implemented `case_links` enabling associative and duplicate-candidate relationships without destructive database merges.
+8. **Field-Level Data Minimization:** Contextually redacts narrative descriptions and PostGIS spatial coordinates when viewing personnel hold insufficient security clearance.
+9. **REST API Contract & Express Router:** Mounted 19 endpoints at `/api/cases` with full authentication, validation, and domain error mapping.
+10. **Frontend Web Console:** Delivered comprehensive multi-tab case management dashboard in `artifacts/kfin-console`.
+11. **Verification & Testing:** 100% pass rate across 19 case acceptance tests, 22 security tests, and 7 database integrity tests.
 
 ---
 
-## 4. Known Risks & Mitigations
+## 3. Active Workspace Packages
 
-1. **Risk:** AI coding agents exceeding scope boundaries or inventing domain logic.
-   - **Mitigation:** Binding instructions in [AGENTS.md](file:///c:/Users/User/Downloads/KFIN-Foundation-main/KFIN-Foundation-main/AGENTS.md) and [AI-DEVELOPMENT-RULES.md](file:///c:/Users/User/Downloads/KFIN-Foundation-main/KFIN-Foundation-main/docs/governance/AI-DEVELOPMENT-RULES.md); strict automated quality gate enforcement.
-2. **Risk:** Unintentional introduction of sensitive or real personal/forensic data.
-   - **Mitigation:** Strict synthetic data mandate; automated secret scanner in CI; clear guidelines in CONTRIBUTING and SECURITY.
-3. **Risk:** Unassigned organizational roles.
-   - **Mitigation:** Marked explicitly as `TBD — governance appointment required` in CODEOWNERS and Constitution without fabricating names.
+* `@workspace/db`: Drizzle ORM schema, relations, enums, migrations, and PostgreSQL connection pool.
+* `@workspace/security`: Identity, scrypt hashing, RFC 6238 TOTP, RBAC/ABAC authorization matrix, and audit logging.
+* `@workspace/case-domain`: Case aggregate root, state machine, repository, service, numbering, and domain events.
+* `@workspace/api-server`: Express HTTP server hosting `/api/auth` and `/api/cases`.
+* `@workspace/kfin-console`: React 19 + Vite forensic intelligence operational console.
+* `@workspace/scripts`: Test runners, database migration/seeding, CI quality checks, SAST, and secret scanning.
 
 ---
 
-## 5. Next Steps
+## 4. Next Steps
 
-Upon successful verification and passing of the Sub-Phase 0.2 Acceptance Gate, work will halt at the strict stop condition awaiting user authorization to proceed to **Sub-Phase 0.3 — Development Tooling, CI/CD & Quality Automation**.
+Upon authorization, work will transition to **Sub-Phase 1.4 — Evidence & Chain-of-Custody Foundation**, which will implement:
+- Physical exhibit accessioning and barcode/QR tamper seals.
+- Evidence vault storage locations and custody transfer manifests.
+- Chain-of-custody immutable transfer ledgers bound directly to Phase 1.3 Case aggregate roots.

@@ -32,6 +32,27 @@ export const caseStatusEnum = pgEnum("case_status", [
   "SUSPENDED",
   "CLOSED",
   "ARCHIVED",
+  "REOPENED",
+]);
+
+export const caseTypeEnum = pgEnum("case_type", [
+  "CRIMINAL_INVESTIGATION",
+  "UNIDENTIFIED_REMAINS",
+  "MISSING_PERSONS",
+  "DISASTER_VICTIM_IDENTIFICATION",
+  "FORENSIC_INTELLIGENCE",
+  "IDENTITY_RESOLUTION",
+  "LABORATORY_EXAMINATION",
+]);
+
+export const caseRoleEnum = pgEnum("case_role", [
+  "LEAD_INVESTIGATOR",
+  "INVESTIGATOR",
+  "FORENSIC_EXAMINER",
+  "EVIDENCE_CUSTODIAN",
+  "TECHNICAL_REVIEWER",
+  "CASE_MANAGER",
+  "AUDITOR",
 ]);
 
 export const participantTypeEnum = pgEnum("participant_type", [
@@ -135,6 +156,26 @@ export const auditActionEnum = pgEnum("audit_action", [
   "REPORT_APPROVE",
   "PERMISSION_CHANGE",
   "LEGAL_HOLD_APPLIED",
+  "MFA_VERIFY",
+  "MFA_FAILED",
+  "ACCOUNT_LOCK",
+  "ACCOUNT_UNLOCK",
+  "ROLE_ASSIGN",
+  "ROLE_REVOKE",
+  "CLEARANCE_ASSIGN",
+  "CLEARANCE_REVOKE",
+  "SESSION_REVOKE",
+  "BREAK_GLASS_ACTIVATE",
+  "ACCESS_DENIED",
+  "SERVICE_AUTH",
+  "CASE_CLOSE",
+  "CASE_REOPEN",
+  "CASE_ASSIGN",
+  "CASE_TRANSFER",
+  "CASE_LINK",
+  "CASE_PARTICIPANT_ADD",
+  "CASE_PARTICIPANT_REMOVE",
+  "CASE_NOTE_ADD",
 ]);
 
 export const auditOutcomeEnum = pgEnum("audit_outcome", [

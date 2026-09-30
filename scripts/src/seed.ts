@@ -1,4 +1,12 @@
 import { pool } from "@workspace/db";
+import {
+  hashPassword,
+  generateTotpSecret,
+  generateBackupCodes,
+  hashApiKey,
+  CANONICAL_PERMISSIONS,
+  ROLE_PERMISSIONS,
+} from "@workspace/security";
 
 export async function runSyntheticSeed(): Promise<void> {
   console.log("=====================================================================");
@@ -50,23 +58,84 @@ export async function runSyntheticSeed(): Promise<void> {
     );
     const orgMap = new Map(orgs.map((o) => [o.code, o.id]));
 
+    console.log("Seeding canonical permissions catalog...");
+    for (const p of CANONICAL_PERMISSIONS) {
+      await client.query(`
+        INSERT INTO permissions (code, domain_group, description)
+        VALUES ($1, $2, $3)
+        ON CONFLICT (code) DO UPDATE SET description = EXCLUDED.description;
+      `, [p.code, p.domainGroup, p.description]);
+    }
+    const { rows: permRows } = await client.query<{ id: string; code: string }>("SELECT id, code FROM permissions;");
+    const permMap = new Map(permRows.map((p) => [p.code, p.id]));
+
+    console.log("Seeding canonical roles catalog...");
+    const roleDescriptions: Record<string, string> = {
+      SYSTEM_ADMINISTRATOR: "Technical infrastructure and service identity management",
+      SECURITY_ADMINISTRATOR: "Identity governance, clearance assignment, and security policies",
+      INVESTIGATOR: "Lead investigator on criminal cases and incident registries",
+      FORENSIC_EXAMINER: "Physical exhibit intake, packaging, and custody tracking",
+      LAB_ANALYST: "Forensic laboratory biological sample analysis and DNA profiling",
+      LAB_REVIEWER: "Peer technical review and formal laboratory report sign-off",
+      CASE_MANAGER: "Case workflow transitions, participant registry, and court disclosures",
+      EVIDENCE_CUSTODIAN: "Evidence vault management, temperature zones, and custodial transfers",
+      DNA_SPECIALIST: "National DNA index querying, match confirmation, and allele review",
+      GOVERNANCE_OFFICER: "Statutory retention schedules, legal holds, and expungement governance",
+      AUDITOR: "Independent forensic audit trail inspection and compliance reporting",
+      INSTITUTIONAL_OFFICER: "Inter-agency liaison officer with read-only shared case access",
+    };
+
+    for (const [roleName, desc] of Object.entries(roleDescriptions)) {
+      await client.query(`
+        INSERT INTO roles (name, description)
+        VALUES ($1, $2)
+        ON CONFLICT (name) DO UPDATE SET description = EXCLUDED.description;
+      `, [roleName, desc]);
+    }
+    const { rows: roleRows } = await client.query<{ id: string; name: string }>("SELECT id, name FROM roles;");
+    const roleMap = new Map(roleRows.map((r) => [r.name, r.id]));
+
+    console.log("Binding role permissions...");
+    for (const [roleName, permCodes] of Object.entries(ROLE_PERMISSIONS)) {
+      const roleId = roleMap.get(roleName);
+      if (!roleId) continue;
+      for (const code of permCodes) {
+        const permId = permMap.get(code);
+        if (!permId) continue;
+        await client.query(`
+          INSERT INTO role_permissions (role_id, permission_id)
+          VALUES ($1, $2)
+          ON CONFLICT (role_id, permission_id) DO NOTHING;
+        `, [roleId, permId]);
+      }
+    }
+
     console.log("Seeding synthetic users & personnel...");
-    const dummyPasswordHash = "$argon2id$v=19$m=65536,t=3,p=4$syntheticHashPlaceholder";
+    const standardPasswordHash = await hashPassword("KFIN-Secure-Pass-2026!");
     const dummyIdHash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
 
     const userData = [
-      { email: "dr.omondi.synthetic@kfin.test", badge: "KFIN-OFF-001", name: "Dr. Evans Omondi (Synthetic Analyst)", org: "NPHL-LAB", clearance: "HIGHLY_RESTRICTED" },
-      { email: "sgt.cheruiyot.synthetic@kfin.test", badge: "KFIN-OFF-002", name: "Sgt. Kiprono Cheruiyot (Synthetic Custodian)", org: "DCI-HQ", clearance: "CONFIDENTIAL" },
-      { email: "insp.wanjiku.synthetic@kfin.test", badge: "KFIN-OFF-003", name: "Insp. Grace Wanjiku (Synthetic Investigator)", org: "DCI-HQ", clearance: "RESTRICTED" },
-      { email: "director.mutua.synthetic@kfin.test", badge: "KFIN-OFF-004", name: "Dr. Faith Mutua (Synthetic Lab Director)", org: "NPHL-LAB", clearance: "HIGHLY_RESTRICTED" },
+      { email: "admin.sec.synthetic@kfin.test", badge: "KFIN-OFF-000", name: "Major David Kariuki (Security Administrator)", org: "DCI-HQ", clearance: "HIGHLY_RESTRICTED", status: "ACTIVE", roles: ["SECURITY_ADMINISTRATOR"] },
+      { email: "admin.sys.synthetic@kfin.test", badge: "KFIN-OFF-005", name: "Eng. Samuel Chege (System Administrator)", org: "DCI-HQ", clearance: "CONFIDENTIAL", status: "ACTIVE", roles: ["SYSTEM_ADMINISTRATOR"] },
+      { email: "dr.omondi.synthetic@kfin.test", badge: "KFIN-OFF-001", name: "Dr. Evans Omondi (Synthetic Analyst)", org: "NPHL-LAB", clearance: "HIGHLY_RESTRICTED", status: "ACTIVE", roles: ["LAB_ANALYST", "DNA_SPECIALIST"] },
+      { email: "sgt.cheruiyot.synthetic@kfin.test", badge: "KFIN-OFF-002", name: "Sgt. Kiprono Cheruiyot (Synthetic Custodian)", org: "DCI-HQ", clearance: "CONFIDENTIAL", status: "ACTIVE", roles: ["EVIDENCE_CUSTODIAN", "FORENSIC_EXAMINER"] },
+      { email: "insp.wanjiku.synthetic@kfin.test", badge: "KFIN-OFF-003", name: "Insp. Grace Wanjiku (Synthetic Investigator)", org: "DCI-HQ", clearance: "RESTRICTED", status: "ACTIVE", roles: ["INVESTIGATOR"] },
+      { email: "director.mutua.synthetic@kfin.test", badge: "KFIN-OFF-004", name: "Dr. Faith Mutua (Synthetic Lab Director)", org: "NPHL-LAB", clearance: "HIGHLY_RESTRICTED", status: "ACTIVE", roles: ["LAB_REVIEWER"] },
+      { email: "auditor.odero.synthetic@kfin.test", badge: "KFIN-OFF-006", name: "Ruth Odero (Compliance Auditor)", org: "ODPP-HQ", clearance: "HIGHLY_RESTRICTED", status: "ACTIVE", roles: ["AUDITOR"] },
+      { email: "officer.kariuki.synthetic@kfin.test", badge: "KFIN-OFF-007", name: "Constable James Kariuki (Inter-Agency Liaison)", org: "NPS-HQ", clearance: "INTERNAL", status: "ACTIVE", roles: ["INSTITUTIONAL_OFFICER"] },
+      { email: "gov.kimani.synthetic@kfin.test", badge: "KFIN-OFF-008", name: "Adv. Brian Kimani (Governance Officer)", org: "ODPP-HQ", clearance: "CONFIDENTIAL", status: "ACTIVE", roles: ["GOVERNANCE_OFFICER"] },
+      { email: "suspended.user.synthetic@kfin.test", badge: "KFIN-OFF-009", name: "Synthetic Suspended Detective", org: "DCI-HQ", clearance: "RESTRICTED", status: "SUSPENDED", roles: ["INVESTIGATOR"] },
+      { email: "locked.user.synthetic@kfin.test", badge: "KFIN-OFF-010", name: "Synthetic Locked Officer", org: "DCI-HQ", clearance: "RESTRICTED", status: "LOCKED", roles: ["INVESTIGATOR"] },
+      { email: "revoked.user.synthetic@kfin.test", badge: "KFIN-OFF-011", name: "Synthetic Revoked Ex-Personnel", org: "DCI-HQ", clearance: "PUBLIC", status: "REVOKED", roles: ["INSTITUTIONAL_OFFICER"] },
     ];
 
     for (const u of userData) {
+      const lockedUntil = u.status === "LOCKED" ? new Date(Date.now() + 3600000) : null;
       await client.query(`
-        INSERT INTO users (organization_id, clearance_level_id, email, badge_number, full_name, national_id_hash, password_hash, account_status)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, 'ACTIVE')
-        ON CONFLICT (email) DO UPDATE SET full_name = EXCLUDED.full_name;
-      `, [orgMap.get(u.org), clearanceMap.get(u.clearance), u.email, u.badge, u.name, dummyIdHash, dummyPasswordHash]);
+        INSERT INTO users (organization_id, clearance_level_id, email, badge_number, full_name, national_id_hash, password_hash, account_status, locked_until)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        ON CONFLICT (email) DO UPDATE SET full_name = EXCLUDED.full_name, account_status = EXCLUDED.account_status, password_hash = EXCLUDED.password_hash;
+      `, [orgMap.get(u.org), clearanceMap.get(u.clearance), u.email, u.badge, u.name, dummyIdHash, standardPasswordHash, u.status, lockedUntil]);
     }
 
     const { rows: userList } = await client.query<{ id: string; email: string }>(
@@ -76,7 +145,70 @@ export async function runSyntheticSeed(): Promise<void> {
     const leadUserId = userMap.get("insp.wanjiku.synthetic@kfin.test")!;
     const analystUserId = userMap.get("dr.omondi.synthetic@kfin.test")!;
     const custodianUserId = userMap.get("sgt.cheruiyot.synthetic@kfin.test")!;
-    const directorUserId = userMap.get("director.mutua@kfin.test")!;
+    const directorUserId = userMap.get("director.mutua.synthetic@kfin.test")!;
+    const secAdminUserId = userMap.get("admin.sec.synthetic@kfin.test")!;
+
+    console.log("Assigning roles to synthetic personnel...");
+    for (const u of userData) {
+      const userId = userMap.get(u.email);
+      if (!userId) continue;
+      for (const roleName of u.roles) {
+        const roleId = roleMap.get(roleName);
+        if (!roleId) continue;
+        await client.query(`
+          INSERT INTO user_roles (user_id, role_id, assigned_by_id)
+          VALUES ($1, $2, $3)
+          ON CONFLICT (user_id, role_id) DO NOTHING;
+        `, [userId, roleId, secAdminUserId]);
+      }
+
+      // Record password history
+      await client.query(`
+        INSERT INTO password_histories (user_id, password_hash)
+        VALUES ($1, $2);
+      `, [userId, standardPasswordHash]);
+    }
+
+    console.log("Configuring MFA enrollment for privileged accounts...");
+    const totpSecret = generateTotpSecret();
+    const backupCodes = generateBackupCodes(10);
+    await client.query(`
+      INSERT INTO mfa_factors (user_id, factor_type, secret, is_verified, backup_codes)
+      VALUES ($1, 'TOTP', $2, true, $3)
+      ON CONFLICT (user_id) DO NOTHING;
+    `, [secAdminUserId, totpSecret, JSON.stringify(backupCodes.hashed)]);
+
+    await client.query(`
+      UPDATE users SET mfa_enabled = true WHERE id = $1;
+    `, [secAdminUserId]);
+
+    console.log("Provisioning synthetic machine-to-machine service identity...");
+    const sampleApiKey = "kfin_sec_live001_c491295b927dfa6006f69165d4b4a1f6a1e35a111b7d5225114777a760b29841";
+    const apiKeyHash = hashApiKey(sampleApiKey);
+    await client.query(`
+      INSERT INTO service_identities (
+        organization_id,
+        service_name,
+        description,
+        api_key_prefix,
+        api_key_hash,
+        allowed_scopes,
+        clearance_level_id,
+        is_active,
+        created_by_id
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, true, $8)
+      ON CONFLICT (service_name) DO NOTHING;
+    `, [
+      orgMap.get("DCI-HQ"),
+      "dci-lims-sync",
+      "Automated LIMS specimen intake and tracking sync connector",
+      "live001",
+      apiKeyHash,
+      JSON.stringify(["lab:submit", "dna:submit", "evidence:read"]),
+      clearanceMap.get("CONFIDENTIAL"),
+      secAdminUserId
+    ]);
+
 
     console.log("Seeding DNA Indices catalog...");
     const indicesData = [
