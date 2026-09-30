@@ -35,6 +35,8 @@ jobs:
 
       - name: Execute Full Quality, Test & Security Suite
         run: pnpm run validate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Verify Monorepo Build Artifacts
         run: |

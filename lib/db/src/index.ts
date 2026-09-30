@@ -29,10 +29,12 @@ const isLocalhost = !connectionString || connectionString.includes("localhost") 
 export const pool = new Pool({
   connectionString: connectionString || "postgresql://postgres:postgres@localhost:5432/kfin_dev",
   ssl: isLocalhost ? false : { rejectUnauthorized: false },
+  connectionTimeoutMillis: 3000,
 });
 
 export const db = drizzle(pool, { schema });
 
 export * from "./schema";
+export type { PoolClient } from "pg";
 
 

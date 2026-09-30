@@ -43,6 +43,8 @@ jobs:
 
       - name: Full Quality, Security, and Contract Validation
         run: pnpm run validate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Verify Clean Working Directory
         run: |

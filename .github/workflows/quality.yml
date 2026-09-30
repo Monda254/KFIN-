@@ -35,3 +35,5 @@ jobs:
 
       - name: Run Full Quality & Security Gate
         run: pnpm run validate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
