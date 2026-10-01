@@ -89,6 +89,12 @@ importers:
       '@workspace/db':
         specifier: workspace:*
         version: link:../../lib/db
+      '@workspace/dna-domain':
+        specifier: workspace:*
+        version: link:../../lib/dna-domain
+      '@workspace/evidence-domain':
+        specifier: workspace:*
+        version: link:../../lib/evidence-domain
       '@workspace/security':
         specifier: workspace:*
         version: link:../../lib/security
@@ -555,6 +561,41 @@ importers:
         specifier: ^0.31.10
         version: 0.31.10
 
+  lib/dna-domain:
+    dependencies:
+      '@workspace/db':
+        specifier: workspace:*
+        version: link:../db
+      '@workspace/evidence-domain':
+        specifier: workspace:*
+        version: link:../evidence-domain
+      '@workspace/security':
+        specifier: workspace:*
+        version: link:../security
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.2(@types/pg@8.23.1)(pg@8.23.0)
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.9.6
+
+  lib/evidence-domain:
+    dependencies:
+      '@workspace/db':
+        specifier: workspace:*
+        version: link:../db
+      '@workspace/security':
+        specifier: workspace:*
+        version: link:../security
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.2(@types/pg@8.23.1)(pg@8.23.0)
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.9.6
+
   lib/security:
     dependencies:
       '@workspace/db':
@@ -573,6 +614,12 @@ importers:
       '@workspace/db':
         specifier: workspace:*
         version: link:../lib/db
+      '@workspace/dna-domain':
+        specifier: workspace:*
+        version: link:../lib/dna-domain
+      '@workspace/evidence-domain':
+        specifier: workspace:*
+        version: link:../lib/evidence-domain
       '@workspace/security':
         specifier: workspace:*
         version: link:../lib/security

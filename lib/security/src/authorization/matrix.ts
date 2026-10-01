@@ -199,8 +199,17 @@ export const ACTION_POLICIES: Record<string, ActionPolicy> = {
   "evidence:create": { action: "evidence:create", requiredPermission: "evidence:create", minimumClearance: "RESTRICTED", requiresPurpose: false, allowCrossOrg: false },
   "evidence:read": { action: "evidence:read", requiredPermission: "evidence:read", minimumClearance: "INTERNAL", requiresPurpose: false, allowCrossOrg: false },
   "evidence:update": { action: "evidence:update", requiredPermission: "evidence:update", minimumClearance: "RESTRICTED", requiresPurpose: true, allowCrossOrg: false },
+  "evidence:seal": { action: "evidence:seal", requiredPermission: "evidence:update", minimumClearance: "RESTRICTED", requiresPurpose: false, allowCrossOrg: false },
+  "evidence:seal_break": { action: "evidence:seal_break", requiredPermission: "evidence:update", minimumClearance: "RESTRICTED", requiresPurpose: true, allowCrossOrg: false },
   "evidence:transfer": { action: "evidence:transfer", requiredPermission: "evidence:transfer", minimumClearance: "CONFIDENTIAL", requiresPurpose: true, allowCrossOrg: true },
+  "evidence:receive": { action: "evidence:receive", requiredPermission: "evidence:transfer", minimumClearance: "RESTRICTED", requiresPurpose: true, allowCrossOrg: true },
+  "evidence:retrieve": { action: "evidence:retrieve", requiredPermission: "evidence:read", minimumClearance: "RESTRICTED", requiresPurpose: true, allowCrossOrg: false },
+  "evidence:return": { action: "evidence:return", requiredPermission: "evidence:update", minimumClearance: "RESTRICTED", requiresPurpose: false, allowCrossOrg: false },
+  "evidence:examine": { action: "evidence:examine", requiredPermission: "evidence:update", minimumClearance: "RESTRICTED", requiresPurpose: true, allowCrossOrg: false },
+  "evidence:derivative_create": { action: "evidence:derivative_create", requiredPermission: "evidence:create", minimumClearance: "RESTRICTED", requiresPurpose: true, allowCrossOrg: false },
+  "evidence:verify_integrity": { action: "evidence:verify_integrity", requiredPermission: "evidence:read", minimumClearance: "INTERNAL", requiresPurpose: false, allowCrossOrg: false },
   "evidence:dispose": { action: "evidence:dispose", requiredPermission: "evidence:dispose", minimumClearance: "CONFIDENTIAL", requiresPurpose: true, allowCrossOrg: false },
+  "evidence:legal_hold": { action: "evidence:legal_hold", requiredPermission: "legal_hold:manage", minimumClearance: "CONFIDENTIAL", requiresPurpose: true, allowCrossOrg: false },
   "vault:manage": { action: "vault:manage", requiredPermission: "vault:manage", minimumClearance: "CONFIDENTIAL", requiresPurpose: false, allowCrossOrg: false },
 
   // DNA operations

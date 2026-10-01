@@ -23,7 +23,18 @@ import {
   caseTransfers,
   caseLinks,
 } from "./cases";
-import { storageLocations, evidenceItems, custodyTransfers } from "./evidence";
+import {
+  storageLocations,
+  evidenceItems,
+  custodyTransfers,
+  evidenceSeals,
+  custodyEvents,
+  custodyExceptions,
+  evidenceDerivatives,
+  evidenceExaminations,
+  evidenceDispositions,
+  evidenceIntegrityVerifications,
+} from "./evidence";
 import {
   biologicalSamples,
   dnaIndices,
@@ -280,9 +291,122 @@ export const evidenceItemsRelations = relations(evidenceItems, ({ one, many }) =
     fields: [evidenceItems.currentCustodianId],
     references: [users.id],
   }),
+  parentItem: one(evidenceItems, {
+    fields: [evidenceItems.parentItemId],
+    references: [evidenceItems.id],
+    relationName: "parentItem",
+  }),
+  childItems: many(evidenceItems, { relationName: "parentItem" }),
   custodyTransfers: many(custodyTransfers),
+  custodyEvents: many(custodyEvents),
+  seals: many(evidenceSeals),
+  exceptions: many(custodyExceptions),
+  derivatives: many(evidenceDerivatives, { relationName: "parentDerivative" }),
+  derivedFrom: many(evidenceDerivatives, { relationName: "childDerivative" }),
+  examinations: many(evidenceExaminations),
+  dispositions: many(evidenceDispositions),
+  verifications: many(evidenceIntegrityVerifications),
   biologicalSamples: many(biologicalSamples),
   examinationRequests: many(examinationRequests),
+}));
+
+export const evidenceSealsRelations = relations(evidenceSeals, ({ one }) => ({
+  evidenceItem: one(evidenceItems, {
+    fields: [evidenceSeals.evidenceId],
+    references: [evidenceItems.id],
+  }),
+  appliedBy: one(users, {
+    fields: [evidenceSeals.appliedById],
+    references: [users.id],
+  }),
+  brokenBy: one(users, {
+    fields: [evidenceSeals.brokenById],
+    references: [users.id],
+  }),
+}));
+
+export const custodyEventsRelations = relations(custodyEvents, ({ one }) => ({
+  evidenceItem: one(evidenceItems, {
+    fields: [custodyEvents.evidenceId],
+    references: [evidenceItems.id],
+  }),
+  actor: one(users, {
+    fields: [custodyEvents.actorId],
+    references: [users.id],
+  }),
+}));
+
+export const custodyExceptionsRelations = relations(custodyExceptions, ({ one }) => ({
+  evidenceItem: one(evidenceItems, {
+    fields: [custodyExceptions.evidenceId],
+    references: [evidenceItems.id],
+  }),
+  reportedBy: one(users, {
+    fields: [custodyExceptions.reportedById],
+    references: [users.id],
+  }),
+  resolvedBy: one(users, {
+    fields: [custodyExceptions.resolvedById],
+    references: [users.id],
+  }),
+}));
+
+export const evidenceDerivativesRelations = relations(evidenceDerivatives, ({ one }) => ({
+  parentEvidence: one(evidenceItems, {
+    fields: [evidenceDerivatives.parentEvidenceId],
+    references: [evidenceItems.id],
+    relationName: "parentDerivative",
+  }),
+  derivedEvidence: one(evidenceItems, {
+    fields: [evidenceDerivatives.derivedEvidenceId],
+    references: [evidenceItems.id],
+    relationName: "childDerivative",
+  }),
+  createdBy: one(users, {
+    fields: [evidenceDerivatives.createdById],
+    references: [users.id],
+  }),
+}));
+
+export const evidenceExaminationsRelations = relations(evidenceExaminations, ({ one }) => ({
+  evidenceItem: one(evidenceItems, {
+    fields: [evidenceExaminations.evidenceId],
+    references: [evidenceItems.id],
+  }),
+  examiner: one(users, {
+    fields: [evidenceExaminations.examinerId],
+    references: [users.id],
+  }),
+}));
+
+export const evidenceDispositionsRelations = relations(evidenceDispositions, ({ one }) => ({
+  evidenceItem: one(evidenceItems, {
+    fields: [evidenceDispositions.evidenceId],
+    references: [evidenceItems.id],
+  }),
+  approvedBy: one(users, {
+    fields: [evidenceDispositions.approvedById],
+    references: [users.id],
+  }),
+  executedBy: one(users, {
+    fields: [evidenceDispositions.executedById],
+    references: [users.id],
+  }),
+  witnessBy: one(users, {
+    fields: [evidenceDispositions.witnessById],
+    references: [users.id],
+  }),
+}));
+
+export const evidenceIntegrityVerificationsRelations = relations(evidenceIntegrityVerifications, ({ one }) => ({
+  evidenceItem: one(evidenceItems, {
+    fields: [evidenceIntegrityVerifications.evidenceId],
+    references: [evidenceItems.id],
+  }),
+  verifiedBy: one(users, {
+    fields: [evidenceIntegrityVerifications.verifiedById],
+    references: [users.id],
+  }),
 }));
 
 export const custodyTransfersRelations = relations(custodyTransfers, ({ one }) => ({

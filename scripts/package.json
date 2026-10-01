@@ -20,12 +20,16 @@
     "db:test": "tsx ./src/db-test.ts",
     "security:test": "tsx ./src/security-test.ts",
     "case:test": "tsx ./src/case-test.ts",
+    "evidence:test": "tsx ./src/evidence-test.ts",
+    "dna:test": "tsx ./src/dna-test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@workspace/db": "workspace:*",
     "@workspace/security": "workspace:*",
-    "@workspace/case-domain": "workspace:*"
+    "@workspace/case-domain": "workspace:*",
+    "@workspace/evidence-domain": "workspace:*",
+    "@workspace/dna-domain": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",

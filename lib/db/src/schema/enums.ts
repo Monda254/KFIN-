@@ -72,6 +72,14 @@ export const evidenceTypeEnum = pgEnum("evidence_type", [
   "DIGITAL_MEDIA",
   "DOCUMENT",
   "TRACE_EVIDENCE",
+  "PHYSICAL_EXHIBIT",
+  "TOXICOLOGICAL",
+  "CHEMICAL",
+  "FIREARM_RELATED",
+  "FINGERPRINT_RELATED",
+  "UNIDENTIFIED_REMAINS",
+  "ENVIRONMENTAL",
+  "OTHER",
 ]);
 
 export const evidenceStatusEnum = pgEnum("evidence_status", [
@@ -82,6 +90,58 @@ export const evidenceStatusEnum = pgEnum("evidence_status", [
   "IN_COURT",
   "DISPOSED",
   "RETURNED",
+  "PACKAGED",
+  "SEALED",
+  "TRANSFERRED",
+  "RECEIVED",
+  "STORED",
+  "RETRIEVED",
+  "EXAMINED",
+  "ARCHIVED",
+  "EXCEPTION",
+]);
+
+export const sealStatusEnum = pgEnum("seal_status", [
+  "INTACT",
+  "BROKEN",
+  "TAMPER_SUSPECTED",
+  "RESEALED",
+  "UNKNOWN",
+]);
+
+export const evidenceConditionEnum = pgEnum("evidence_condition", [
+  "INTACT",
+  "DAMAGED",
+  "WET",
+  "CONTAMINATED",
+  "DEGRADED",
+  "SEALED",
+  "UNSEALED",
+  "UNKNOWN",
+]);
+
+export const custodyExceptionTypeEnum = pgEnum("custody_exception_type", [
+  "TRANSFER_DISPUTED",
+  "SEAL_BROKEN",
+  "MISSING",
+  "DAMAGED",
+  "CONTAMINATION_SUSPECTED",
+  "IDENTITY_MISMATCH",
+]);
+
+export const derivativeTypeEnum = pgEnum("derivative_type", [
+  "SUBDIVISION",
+  "EXTRACTED_SAMPLE",
+  "TEST_DERIVATIVE",
+  "DIGITAL_COPY",
+]);
+
+export const dispositionTypeEnum = pgEnum("disposition_type", [
+  "RETURNED",
+  "TRANSFERRED_OUT",
+  "RETAINED",
+  "ARCHIVED",
+  "DESTROYED",
 ]);
 
 export const transferReasonEnum = pgEnum("transfer_reason", [
@@ -176,6 +236,28 @@ export const auditActionEnum = pgEnum("audit_action", [
   "CASE_PARTICIPANT_ADD",
   "CASE_PARTICIPANT_REMOVE",
   "CASE_NOTE_ADD",
+  "EVIDENCE_CREATE",
+  "EVIDENCE_VIEW",
+  "EVIDENCE_UPDATE",
+  "EVIDENCE_COLLECT",
+  "EVIDENCE_PACKAGE",
+  "EVIDENCE_SEAL",
+  "EVIDENCE_SEAL_BREAK",
+  "EVIDENCE_RESEAL",
+  "EVIDENCE_TRANSFER_INITIATE",
+  "EVIDENCE_TRANSFER_RECEIVE",
+  "EVIDENCE_TRANSFER_REJECT",
+  "EVIDENCE_RETRIEVE",
+  "EVIDENCE_RETURN",
+  "EVIDENCE_EXAMINE",
+  "EVIDENCE_DERIVATIVE_CREATE",
+  "EVIDENCE_VERIFY_INTEGRITY",
+  "EVIDENCE_DISPOSE",
+  "EVIDENCE_EXPORT",
+  "EVIDENCE_EXCEPTION_RAISE",
+  "EVIDENCE_EXCEPTION_RESOLVE",
+  "EVIDENCE_LEGAL_HOLD_APPLY",
+  "EVIDENCE_LEGAL_HOLD_RELEASE",
 ]);
 
 export const auditOutcomeEnum = pgEnum("audit_outcome", [

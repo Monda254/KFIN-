@@ -19,6 +19,9 @@
       "path": "../../lib/case-domain"
     },
     {
+      "path": "../../lib/evidence-domain"
+    },
+    {
       "path": "../../lib/api-zod"
     }
   ]
