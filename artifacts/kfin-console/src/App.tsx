@@ -96,6 +96,8 @@ const navItems = [
   { href: '/cases', label: 'Forensic Cases', caption: 'Active Case Dockets', icon: FolderTree },
   { href: '/evidence', label: 'Evidence & Custody', caption: 'Tamper Seals & Ledgers', icon: Box },
   { href: '/dna', label: 'DNA Intelligence', caption: 'CODIS 20 STR Loci Matrix', icon: Dna },
+  { href: '/kinship', label: 'Kinship & Familial', caption: 'Relationship & Lead Engine', icon: GitBranch },
+  { href: '/intelligence', label: 'Cross-Case & Graph', caption: 'Link Analysis & Leads Engine', icon: Share2 },
   { href: '/laboratory', label: 'Lab & Examinations', caption: 'Analysis & Verified Reports', icon: Microscope },
   { href: '/audit', label: 'Audit & Governance', caption: 'Immutable Event Ledger', icon: ShieldCheck },
   { href: '/foundation', label: 'Foundation & Quality', caption: 'Phase 0 Governance & CI', icon: Landmark },
@@ -1354,6 +1356,331 @@ function AuditView() {
 }
 
 // -----------------------------------------------------------------------------
+// 6.5. View: Advanced Kinship, Relationship & Familial Search (Phase 1.6)
+// -----------------------------------------------------------------------------
+function KinshipView() {
+  const [activeSubTab, setActiveSubTab] = useState<'investigations' | 'analysis' | 'pedigree' | 'familial'>('investigations');
+
+  const mockInvestigations = [
+    {
+      id: 'kin-inv-001',
+      investigationNumber: 'KIN-NPHL-2026-00012',
+      caseId: 'case-2026-0012',
+      caseNumber: 'KFIN-DCI-2026-00891',
+      purpose: 'Missing Person Family Relationship Identification',
+      legalBasis: 'National Forensic DNA Regulations 2026, Section 14',
+      status: 'AUTHORIZED',
+      sensitivity: 'HIGHLY_RESTRICTED',
+      createdAt: '2026-10-04T10:15:00Z',
+      hypothesesCount: 2,
+    },
+    {
+      id: 'kin-inv-002',
+      investigationNumber: 'KIN-NPHL-2026-00013',
+      caseId: 'case-2026-0015',
+      caseNumber: 'KFIN-DCI-2026-00942',
+      purpose: 'Unidentified Remains Kinship Matching Inquiry',
+      legalBasis: 'Inquest Act (Cap 75) & DNA Act 2026',
+      status: 'UNDER_REVIEW',
+      sensitivity: 'HIGHLY_RESTRICTED',
+      createdAt: '2026-10-05T08:30:00Z',
+      hypothesesCount: 1,
+    },
+  ];
+
+  const mockPedigreeNodes = [
+    { id: 'node-1', label: 'Alleged Father (Deceased)', gender: 'MALE', nodeStatus: 'KNOWN', profileId: 'DNA-NPHL-2026-00001' },
+    { id: 'node-2', label: 'Biological Mother', gender: 'FEMALE', nodeStatus: 'KNOWN', profileId: 'DNA-NPHL-2026-00003' },
+    { id: 'node-3', label: 'Missing Person (Child)', gender: 'MALE', nodeStatus: 'CONFIRMED', profileId: 'DNA-NPHL-2026-00002' },
+    { id: 'node-4', label: 'Unidentified Remains', gender: 'UNKNOWN', nodeStatus: 'HYPOTHESIZED', profileId: 'DNA-NPHL-2026-00099' },
+  ];
+
+  return (
+    <div>
+      <SectionHeading
+        eyebrow="Phase 1.6 Advanced Forensic Intelligence"
+        title="Kinship, Relationship Analysis & Familial Searching"
+        detail="Authorized forensic relationship analysis, pedigree tree visualization, versioned population likelihood ratio calculation (KFIN-KINSHIP-CALC v1.6.0), four-eyes scientific review, and investigative lead candidate ranking."
+      />
+
+      {/* Kinship Top Stat Tiles */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+        <StatTile
+          label="Kinship Investigations"
+          value={mockInvestigations.length}
+          detail="Authorized statutory dockets"
+          accent="gold"
+          icon={GitBranch}
+        />
+        <StatTile
+          label="Likelihood Ratio Engine"
+          value="KFIN-KINSHIP-1.6"
+          detail="KE-STR-FREQ v1.0.0 Dataset"
+          accent="emerald"
+          icon={Activity}
+        />
+        <StatTile
+          label="Pedigree Tree Versions"
+          value="v4"
+          detail="Reconstructable audit history"
+          accent="cyan"
+          icon={FolderTree}
+        />
+        <StatTile
+          label="Familial Search Leads"
+          value="1 Active Lead"
+          detail="Tagged INVESTIGATIVE_LEAD"
+          accent="purple"
+          icon={Search}
+        />
+      </div>
+
+      {/* Sub Tab Navigation */}
+      <div className="flex border-b border-slate-800 space-x-2 mb-6 text-xs">
+        {[
+          { id: 'investigations', label: 'Kinship Investigations & Hypotheses', icon: GitBranch },
+          { id: 'analysis', label: 'STR Likelihood Ratio Workbench', icon: Activity },
+          { id: 'pedigree', label: 'Pedigree Tree Visualizer (v4)', icon: FolderTree },
+          { id: 'familial', label: 'Authorized Familial Searching', icon: Search },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveSubTab(tab.id as any)}
+              className={cn(
+                'flex items-center gap-2 rounded-t-lg px-4 py-2.5 font-semibold transition-colors border-b-2',
+                activeSubTab === tab.id
+                  ? 'border-[#d5a33a] bg-slate-900 text-[#d5a33a]'
+                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/40',
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Sub Tab 1: Kinship Investigations */}
+      {activeSubTab === 'investigations' && (
+        <div className="space-y-6">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6">
+            <h3 className="text-base font-bold text-slate-100 mb-4 flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <GitBranch className="h-5 w-5 text-[#d5a33a]" />
+                Authorized Kinship Investigation Dockets
+              </span>
+              <span className="font-mono text-xs text-slate-400">Strict Legal Basis Enforced</span>
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-slate-800 font-mono text-[10px] uppercase text-slate-400">
+                    <th className="pb-3">Investigation No.</th>
+                    <th className="pb-3">Case Docket</th>
+                    <th className="pb-3">Statutory Legal Basis</th>
+                    <th className="pb-3">Sensitivity</th>
+                    <th className="pb-3">Status</th>
+                    <th className="pb-3">Created</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 font-sans">
+                  {mockInvestigations.map((inv) => (
+                    <tr key={inv.id} className="hover:bg-slate-800/30">
+                      <td className="py-3.5 font-mono font-bold text-[#d5a33a]">{inv.investigationNumber}</td>
+                      <td className="py-3.5 font-mono text-slate-300">{inv.caseNumber}</td>
+                      <td className="py-3.5 text-slate-300">{inv.legalBasis}</td>
+                      <td className="py-3.5"><span className="rounded bg-rose-950/40 border border-rose-500/30 text-rose-400 px-2 py-0.5 font-mono text-[10px]">{inv.sensitivity}</span></td>
+                      <td className="py-3.5"><StatusBadge status={inv.status} /></td>
+                      <td className="py-3.5 font-mono text-slate-400">{new Date(inv.createdAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sub Tab 2: STR Likelihood Ratio Workbench */}
+      {activeSubTab === 'analysis' && (
+        <div className="space-y-6">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div>
+                <span className="font-mono text-xs font-bold text-[#d5a33a]">ANALYSIS RUN: KANA-NPHL-2026-05001</span>
+                <h3 className="text-lg font-bold text-slate-100 mt-1">Parent-Child Kinship Likelihood Ratio Analysis</h3>
+              </div>
+              <StatusBadge status="SUPPORTED" variant="good" />
+            </div>
+
+            {/* Scientific Parameters Strip */}
+            <div className="grid gap-4 sm:grid-cols-4 text-xs">
+              <div className="rounded-lg border border-slate-800/80 bg-slate-950/40 p-3">
+                <span className="text-slate-500 font-mono text-[10px] uppercase">Algorithm & Version</span>
+                <p className="text-slate-200 font-bold mt-1">KFIN-KINSHIP-CALC v1.6.0</p>
+              </div>
+              <div className="rounded-lg border border-slate-800/80 bg-slate-950/40 p-3">
+                <span className="text-slate-500 font-mono text-[10px] uppercase">Population Reference</span>
+                <p className="text-slate-200 font-bold mt-1">KE-STR-FREQ v1.0.0</p>
+              </div>
+              <div className="rounded-lg border border-slate-800/80 bg-slate-950/40 p-3">
+                <span className="text-slate-500 font-mono text-[10px] uppercase">Combined Likelihood Ratio (CLR)</span>
+                <p className="text-emerald-400 font-bold font-mono text-base mt-0.5">1.4829e+04 (14,829.4)</p>
+              </div>
+              <div className="rounded-lg border border-slate-800/80 bg-slate-950/40 p-3">
+                <span className="text-slate-500 font-mono text-[10px] uppercase">Scientific Probability</span>
+                <p className="text-emerald-400 font-bold mt-1">99.993% Parentage Support</p>
+              </div>
+            </div>
+
+            {/* Locus-by-Locus Panel Breakdown Table */}
+            <div>
+              <h4 className="text-xs font-mono uppercase text-slate-400 font-bold mb-3">Locus Panel IBS & Likelihood Breakdown</h4>
+              <div className="overflow-x-auto rounded-lg border border-slate-800">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="bg-slate-950/80 border-b border-slate-800 font-mono text-[10px] uppercase text-slate-400">
+                      <th className="p-3">Locus Name</th>
+                      <th className="p-3">Profile A Alleles (Parent)</th>
+                      <th className="p-3">Profile B Alleles (Child)</th>
+                      <th className="p-3">Shared Alleles</th>
+                      <th className="p-3">IBS State</th>
+                      <th className="p-3">Locus Likelihood Ratio</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60 font-sans">
+                    {[
+                      { locus: 'D3S1358', a: '15, 16', b: '15, 17', shared: '15', ibs: 'IBS-1', lr: '1.4286' },
+                      { locus: 'vWA', a: '16, 17', b: '17, 18', shared: '17', ibs: 'IBS-1', lr: '1.9231' },
+                      { locus: 'FGA', a: '22, 23', b: '23, 24', shared: '23', ibs: 'IBS-1', lr: '2.0833' },
+                      { locus: 'D8S1179', a: '13, 14', b: '13, 15', shared: '13', ibs: 'IBS-1', lr: '1.5625' },
+                      { locus: 'D21S11', a: '29, 30', b: '29, 31', shared: '29', ibs: 'IBS-1', lr: '1.7857' },
+                    ].map((row) => (
+                      <tr key={row.locus} className="hover:bg-slate-800/30">
+                        <td className="p-3 font-mono font-bold text-slate-200">{row.locus}</td>
+                        <td className="p-3 font-mono text-slate-300">{row.a}</td>
+                        <td className="p-3 font-mono text-slate-300">{row.b}</td>
+                        <td className="p-3 font-mono text-emerald-400 font-bold">{row.shared}</td>
+                        <td className="p-3"><span className="rounded bg-slate-800 px-2 py-0.5 font-mono text-[10px] text-cyan-400">{row.ibs}</span></td>
+                        <td className="p-3 font-mono text-[#d5a33a] font-bold">{row.lr}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sub Tab 3: Pedigree Tree Visualizer */}
+      {activeSubTab === 'pedigree' && (
+        <div className="space-y-6">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div>
+                <span className="font-mono text-xs font-bold text-[#d5a33a]">PEDIGREE ID: PED-2026-0104</span>
+                <h3 className="text-lg font-bold text-slate-100 mt-1">Kiprotich Family Pedigree Tree Representation</h3>
+              </div>
+              <span className="rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-400 px-3 py-1 text-xs font-mono font-bold">
+                VERSION v4 (RECONSTRUCTABLE)
+              </span>
+            </div>
+
+            {/* Interactive Node Cards */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {mockPedigreeNodes.map((node) => (
+                <div key={node.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-[#d5a33a]">{node.id}</span>
+                    <StatusBadge status={node.nodeStatus} />
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-200">{node.label}</h4>
+                  <p className="text-xs text-slate-400 font-mono">Gender: {node.gender}</p>
+                  <p className="text-[11px] text-emerald-400 font-mono truncate">Profile: {node.profileId}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Version Audit Log */}
+            <div className="border-t border-slate-800 pt-4">
+              <h4 className="text-xs font-mono uppercase text-slate-400 font-bold mb-3">Pedigree Version Audit History</h4>
+              <div className="space-y-2 text-xs font-mono">
+                <div className="rounded-lg border border-slate-800 bg-slate-950/40 p-3 flex justify-between">
+                  <span className="text-slate-300">v4: Linked father node to missing child profile (DNA-NPHL-2026-00002)</span>
+                  <span className="text-slate-500">2026-10-05 11:20:00</span>
+                </div>
+                <div className="rounded-lg border border-slate-800 bg-slate-950/40 p-3 flex justify-between">
+                  <span className="text-slate-300">v3: Added biological mother reference node</span>
+                  <span className="text-slate-500">2026-10-04 16:45:00</span>
+                </div>
+                <div className="rounded-lg border border-slate-800 bg-slate-950/40 p-3 flex justify-between">
+                  <span className="text-slate-300">v1: Initial pedigree structure created</span>
+                  <span className="text-slate-500">2026-10-04 10:15:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sub Tab 4: Familial Searching */}
+      {activeSubTab === 'familial' && (
+        <div className="space-y-6">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div>
+                <span className="font-mono text-xs font-bold text-[#d5a33a]">FAMILIAL SEARCH REQUEST: FSR-NPHL-2026-03001</span>
+                <h3 className="text-lg font-bold text-slate-100 mt-1">Authorized Familial Candidate Ranking Engine</h3>
+              </div>
+              <StatusBadge status="COMPLETED" variant="good" />
+            </div>
+
+            {/* Candidate Ranking Output Table */}
+            <div>
+              <div className="mb-3 flex items-center justify-between">
+                <h4 className="text-xs font-mono uppercase text-slate-400 font-bold">Candidate Relationship Lead Ranking</h4>
+                <span className="rounded bg-rose-950/40 border border-rose-500/30 text-rose-400 px-2.5 py-0.5 text-[10px] font-mono">
+                  ELIMINATION DB PROTECTED
+                </span>
+              </div>
+              <div className="overflow-x-auto rounded-lg border border-slate-800">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="bg-slate-950/80 border-b border-slate-800 font-mono text-[10px] uppercase text-slate-400">
+                      <th className="p-3">Rank #</th>
+                      <th className="p-3">Candidate DNA Profile</th>
+                      <th className="p-3">Estimated Relationship</th>
+                      <th className="p-3">Likelihood Score</th>
+                      <th className="p-3">Classification Lead Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60 font-sans">
+                    <tr className="hover:bg-slate-800/30">
+                      <td className="p-3 font-mono font-bold text-[#d5a33a]">#1</td>
+                      <td className="p-3 font-mono text-slate-200 font-bold">DNA-NPHL-2026-00002</td>
+                      <td className="p-3 font-mono text-slate-300">PARENT_CHILD</td>
+                      <td className="p-3 font-mono text-emerald-400 font-bold">14,829.4</td>
+                      <td className="p-3">
+                        <span className="rounded bg-amber-950/50 border border-amber-500/30 text-amber-300 px-2.5 py-1 text-[11px] font-mono font-bold">
+                          INVESTIGATIVE_LEAD
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
 // 7. View: Foundation & Quality Gates (Phase 0)
 // -----------------------------------------------------------------------------
 function FoundationView() {
@@ -1419,6 +1746,376 @@ function FoundationView() {
 }
 
 // -----------------------------------------------------------------------------
+// 6.6. View: Cross-Case Forensic Intelligence & Link Analysis (Phase 1.7)
+// -----------------------------------------------------------------------------
+function IntelligenceView() {
+  const [activeSubTab, setActiveSubTab] = useState<'graph' | 'leads' | 'caselinks' | 'observations'>('graph');
+  const [maxDepth, setMaxDepth] = useState<number>(2);
+  const [selectedClass, setSelectedClass] = useState<string>('ALL');
+
+  const mockNodes = [
+    { id: 'CASE:case_2026_001', type: 'CASE', label: 'Nairobi Burglary Docket 2026-001', org: 'NPHL Lab', sensitivity: 'RESTRICTED', isRedacted: false },
+    { id: 'EVIDENCE:evd_2026_101', type: 'EVIDENCE', label: 'Bloodstain Swab (EVD-101)', org: 'NPHL Lab', sensitivity: 'RESTRICTED', isRedacted: false },
+    { id: 'DNA_PROFILE:dna_prof_001', type: 'DNA_PROFILE', label: 'STR Profile KFIN-SYN-DNA-001', org: 'NPHL Lab', sensitivity: 'HIGHLY_RESTRICTED', isRedacted: false },
+    { id: 'CASE:case_2026_002', type: 'CASE', label: 'Mombasa Store Theft Docket 2026-002', org: 'DCI HQ', sensitivity: 'RESTRICTED', isRedacted: false },
+    { id: 'PERSON:prs_john_doe', type: 'PERSON', label: 'John Doe (Suspect)', org: 'DCI HQ', sensitivity: 'RESTRICTED', isRedacted: false },
+    { id: 'CASE:case_2026_999', type: 'CASE', label: '[RESTRICTED CASE]', org: 'NIS Agency', sensitivity: 'SECRET', isRedacted: true },
+  ];
+
+  const mockEdges = [
+    { id: 'e1', source: 'CASE:case_2026_001', target: 'EVIDENCE:evd_2026_101', type: 'RECOVERED_FROM', class: 'FACT', provenance: 'SCENE_EXHIBIT_LOG' },
+    { id: 'e2', source: 'EVIDENCE:evd_2026_101', target: 'DNA_PROFILE:dna_prof_001', type: 'PRODUCED_PROFILE', class: 'CONFIRMED_FORENSIC_RELATIONSHIP', provenance: 'LAB_STR_PROFILE_ANALYSIS' },
+    { id: 'e3', source: 'DNA_PROFILE:dna_prof_001', target: 'CASE:case_2026_002', type: 'MATCHED_TO', class: 'ANALYTICAL_RELATIONSHIP', provenance: 'NATIONAL_DNA_INDEX_SEARCH' },
+    { id: 'e4', source: 'PERSON:prs_john_doe', target: 'CASE:case_2026_002', type: 'SUSPECT_IN', class: 'HYPOTHESIS', provenance: 'INVESTIGATIVE_TIP' },
+    { id: 'e5', source: 'CASE:case_2026_001', target: 'CASE:case_2026_999', type: 'CROSS_ORG_LINK', class: 'INVESTIGATIVE_LEAD', provenance: 'INTELLIGENCE_TRAVERSAL' },
+  ];
+
+  const mockLeads = [
+    {
+      id: 'LEAD-001',
+      leadNumber: 'KFIN-LEAD-SYN-NPHL-2026-001',
+      title: 'Investigate Serial Burglary Link Nairobi-Mombasa',
+      priority: 'CRITICAL',
+      status: 'ASSIGNED',
+      assignedInvestigator: 'Insp. James Omondi (Badge #9921)',
+      assignedOrg: 'NPHL Forensic Biology Unit',
+      rationale: 'High DNA STR LR match between exhibit profiles across Nairobi and Mombasa dockets.',
+      createdAt: '2026-10-05T09:30:00Z',
+    },
+    {
+      id: 'LEAD-002',
+      leadNumber: 'KFIN-LEAD-SYN-NPHL-2026-002',
+      title: 'Verify Duplicate Person Record (John Doe vs Jonathan Doe)',
+      priority: 'PRIORITY',
+      status: 'UNDER_REVIEW',
+      assignedInvestigator: 'Capt. Sarah Kamau (Badge #4412)',
+      assignedOrg: 'DCI Criminal Records Office',
+      rationale: 'National ID match 33445566 with 94% similarity score across case dockets.',
+      createdAt: '2026-10-05T11:15:00Z',
+    },
+  ];
+
+  const mockCaseLinks = [
+    {
+      id: 'LNK-001',
+      sourceCase: 'KFIN-DCI-2026-00891 (Nairobi)',
+      targetCase: 'KFIN-DCI-2026-00942 (Mombasa)',
+      linkType: 'COMMON_BIOLOGICAL_EXHIBIT',
+      status: 'CONFIRMED',
+      approvedBy: 'Dr. A. Oduor (Director Forensic Services)',
+      rationale: 'Identical DNA profile identified in exhibit swabs.',
+    },
+  ];
+
+  const mockObservations = [
+    {
+      id: 'OBS-001',
+      obsNumber: 'KFIN-OBS-SYN-NPHL-2026-001',
+      title: 'Cross-case DNA STR Match Discovery',
+      description: 'DNA profile from Exhibit EVD-101 matched crime scene sample in Case 002 with LR = 1.45e9.',
+      rationale: 'National DNA database automated candidate match trigger.',
+      createdAt: '2026-10-05T08:00:00Z',
+    },
+  ];
+
+  const filteredEdges = mockEdges.filter(e => selectedClass === 'ALL' || e.class === selectedClass);
+
+  return (
+    <div>
+      <SectionHeading
+        eyebrow="Phase 1.7 Cross-Case Forensic Intelligence"
+        title="Cross-Case Link Analysis & Intelligence Graph"
+        detail="Authorization-aware multi-depth entity relationship traversal, minimum necessary disclosure, separation of duties lead workflows, and non-destructive case linking."
+      />
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+        <StatTile
+          label="Active Graph Nodes"
+          value={mockNodes.length}
+          detail="Cases, Evidence, DNA & Persons"
+          accent="gold"
+          icon={Share2}
+        />
+        <StatTile
+          label="Forensic Relationships"
+          value={mockEdges.length}
+          detail="Fact, Analytical & Lead classes"
+          accent="emerald"
+          icon={GitBranch}
+        />
+        <StatTile
+          label="Intelligence Leads"
+          value={mockLeads.length}
+          detail="Under active human review"
+          accent="cyan"
+          icon={Activity}
+        />
+        <StatTile
+          label="Confirmed Case Links"
+          value={mockCaseLinks.length}
+          detail="SoD verified case associations"
+          accent="purple"
+          icon={Waypoints}
+        />
+      </div>
+
+      <div className="flex border-b border-slate-800 space-x-2 mb-6 text-xs overflow-x-auto">
+        {[
+          { id: 'graph', label: 'Link Analysis Graph Workbench', icon: Share2 },
+          { id: 'leads', label: `Intelligence Leads Queue (${mockLeads.length})`, icon: Activity },
+          { id: 'caselinks', label: `Case Links & Resolution (${mockCaseLinks.length})`, icon: Waypoints },
+          { id: 'observations', label: `Observation Log (${mockObservations.length})`, icon: BookOpen },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveSubTab(tab.id as any)}
+              className={cn(
+                'flex items-center gap-2 rounded-t-lg px-4 py-2.5 font-semibold transition-colors border-b-2 whitespace-nowrap',
+                activeSubTab === tab.id
+                  ? 'border-[#d5a33a] bg-slate-900 text-[#d5a33a]'
+                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/40',
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {activeSubTab === 'graph' && (
+        <div className="space-y-6">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div>
+                <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                  <Share2 className="h-5 w-5 text-[#d5a33a]" />
+                  Multi-Depth Cross-Case Intelligence Graph
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Server-side clearance enforcement & minimum necessary disclosure (Depth 1 to 3).
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3 text-xs">
+                <div className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5">
+                  <span className="text-slate-400 font-mono text-[11px]">Max Traversal Depth:</span>
+                  <select
+                    value={maxDepth}
+                    onChange={(e) => setMaxDepth(Number(e.target.value))}
+                    className="bg-transparent text-slate-200 font-bold focus:outline-none"
+                  >
+                    <option value={1}>Depth 1 (Direct)</option>
+                    <option value={2}>Depth 2 (Network)</option>
+                    <option value={3}>Depth 3 (Broad Intelligence)</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5">
+                  <span className="text-slate-400 font-mono text-[11px]">Filter Relationship Class:</span>
+                  <select
+                    value={selectedClass}
+                    onChange={(e) => setSelectedClass(e.target.value)}
+                    className="bg-transparent text-slate-200 font-bold focus:outline-none"
+                  >
+                    <option value="ALL">All Classes</option>
+                    <option value="FACT">FACT</option>
+                    <option value="ANALYTICAL_RELATIONSHIP">ANALYTICAL_RELATIONSHIP</option>
+                    <option value="INVESTIGATIVE_LEAD">INVESTIGATIVE_LEAD</option>
+                    <option value="HYPOTHESIS">HYPOTHESIS</option>
+                    <option value="CONFIRMED_FORENSIC_RELATIONSHIP">CONFIRMED_FORENSIC_RELATIONSHIP</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-800/90 bg-slate-950/80 p-6 space-y-6">
+              <h4 className="text-xs font-mono uppercase text-slate-400 font-bold mb-2 flex items-center justify-between">
+                <span>Discovered Entity Nodes ({mockNodes.length})</span>
+                <span className="text-amber-400">AUTHORIZATION-AWARE GRAPH ENGINE</span>
+              </h4>
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {mockNodes.map((node) => (
+                  <div
+                    key={node.id}
+                    className={cn(
+                      'rounded-xl border p-4 transition-all',
+                      node.isRedacted
+                        ? 'border-rose-500/40 bg-rose-950/20'
+                        : node.type === 'CASE'
+                        ? 'border-amber-500/30 bg-slate-900/60'
+                        : node.type === 'DNA_PROFILE'
+                        ? 'border-cyan-500/30 bg-slate-900/60'
+                        : 'border-slate-800 bg-slate-900/60'
+                    )}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[11px] font-bold text-[#d5a33a]">{node.type}</span>
+                      <span
+                        className={cn(
+                          'rounded px-2 py-0.5 font-mono text-[10px] font-semibold',
+                          node.isRedacted
+                            ? 'bg-rose-950/60 border border-rose-500/40 text-rose-400'
+                            : 'bg-slate-800 text-slate-400'
+                        )}
+                      >
+                        {node.sensitivity}
+                      </span>
+                    </div>
+
+                    <h5 className="mt-2 text-sm font-bold text-slate-100 flex items-center gap-2">
+                      {node.isRedacted && <Lock className="h-3.5 w-3.5 text-rose-400 shrink-0" />}
+                      <span className={node.isRedacted ? 'text-rose-400 font-mono' : ''}>{node.label}</span>
+                    </h5>
+
+                    <div className="mt-3 flex items-center justify-between text-[11px] font-mono border-t border-slate-800/80 pt-2 text-slate-400">
+                      <span>Org: {node.org}</span>
+                      <span className="text-slate-500">ID: {node.id.split(':')[1]}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t border-slate-800 pt-6">
+                <h4 className="text-xs font-mono uppercase text-slate-400 font-bold mb-3">Active Forensic Edges ({filteredEdges.length})</h4>
+                <div className="space-y-2">
+                  {filteredEdges.map((edge) => (
+                    <div key={edge.id} className="rounded-lg border border-slate-800 bg-slate-900/40 p-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-slate-200">{edge.source}</span>
+                        <span className="text-slate-500 font-mono">━━[{edge.type}]━━►</span>
+                        <span className="font-mono font-bold text-slate-200">{edge.target}</span>
+                      </div>
+                      <div className="flex items-center gap-3 font-mono text-[11px]">
+                        <span className="text-slate-400">Source: {edge.provenance}</span>
+                        <StatusBadge status={edge.class} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeSubTab === 'leads' && (
+        <div className="space-y-6">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div>
+                <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-[#d5a33a]" />
+                  Actionable Intelligence Leads Queue
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Separation of Duties (SoD) enforced: Assigned investigator cannot be the sole approver confirming a lead.
+                </p>
+              </div>
+              <span className="font-mono text-xs text-amber-400 bg-amber-950/40 border border-amber-500/30 rounded-full px-3 py-1">
+                2 ACTIVE LEADS
+              </span>
+            </div>
+
+            <div className="space-y-4">
+              {mockLeads.map((lead) => (
+                <div key={lead.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-5 space-y-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-mono text-xs font-bold text-[#d5a33a]">{lead.leadNumber}</span>
+                    <div className="flex items-center gap-2">
+                      <StatusBadge status={lead.priority} />
+                      <StatusBadge status={lead.status} />
+                    </div>
+                  </div>
+
+                  <h4 className="text-base font-bold text-slate-100">{lead.title}</h4>
+                  <p className="text-xs text-slate-300 leading-relaxed font-sans">{lead.rationale}</p>
+
+                  <div className="grid gap-2 sm:grid-cols-2 text-[11px] font-mono border-t border-slate-800/80 pt-3 text-slate-400">
+                    <div>
+                      <span className="text-slate-500">Assigned Investigator: </span>
+                      <span className="text-slate-200">{lead.assignedInvestigator}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500">Assigned Organization: </span>
+                      <span className="text-slate-200">{lead.assignedOrg}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeSubTab === 'caselinks' && (
+        <div className="space-y-6">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div>
+                <h3 className="text-base font-bold text-slate-100 flex items-center gap-2">
+                  <Waypoints className="h-5 w-5 text-emerald-400" />
+                  Confirmed Case Links & Person Resolution Candidates
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Controlled case linking preserves individual case identities while establishing formal investigative connections.
+                </p>
+              </div>
+              <StatusBadge status="CONFIRMED_LINK" variant="good" />
+            </div>
+
+            <div className="space-y-4">
+              {mockCaseLinks.map((link) => (
+                <div key={link.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-emerald-400 flex items-center gap-2">
+                      <span>{link.sourceCase}</span>
+                      <span className="text-slate-500 font-mono">◀━━━━[{link.linkType}]━━━━►</span>
+                      <span>{link.targetCase}</span>
+                    </span>
+                    <StatusBadge status={link.status} variant="good" />
+                  </div>
+                  <p className="text-xs text-slate-300">Rationale: {link.rationale}</p>
+                  <p className="text-[11px] text-slate-500 font-mono">Approved By: {link.approvedBy}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeSubTab === 'observations' && (
+        <div className="space-y-6">
+          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-6">
+            <h3 className="text-base font-bold text-slate-100 flex items-center gap-2 border-b border-slate-800 pb-4">
+              <BookOpen className="h-5 w-5 text-[#d5a33a]" />
+              Intelligence Observation Records
+            </h3>
+
+            <div className="space-y-4">
+              {mockObservations.map((obs) => (
+                <div key={obs.id} className="rounded-xl border border-slate-800 bg-slate-950/60 p-5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold text-[#d5a33a]">{obs.obsNumber}</span>
+                    <span className="font-mono text-[10px] text-slate-500">{new Date(obs.createdAt).toLocaleString()}</span>
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-100">{obs.title}</h4>
+                  <p className="text-xs text-slate-300">{obs.description}</p>
+                  <p className="text-[11px] text-slate-400 font-mono">Rationale: {obs.rationale}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------------
 // App Routing Component
 // -----------------------------------------------------------------------------
 export default function App() {
@@ -1433,6 +2130,8 @@ export default function App() {
                 <Route path="/cases" component={CasesView} />
                 <Route path="/evidence" component={EvidenceView} />
                 <Route path="/dna" component={DnaView} />
+                <Route path="/kinship" component={KinshipView} />
+                <Route path="/intelligence" component={IntelligenceView} />
                 <Route path="/laboratory" component={LaboratoryView} />
                 <Route path="/audit" component={AuditView} />
                 <Route path="/foundation" component={FoundationView} />

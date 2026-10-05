@@ -1,0 +1,19 @@
+{
+  "name": "@workspace/kinship-domain",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@workspace/db": "workspace:*",
+    "@workspace/dna-domain": "workspace:*",
+    "@workspace/evidence-domain": "workspace:*",
+    "@workspace/security": "workspace:*",
+    "drizzle-orm": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:"
+  }
+}

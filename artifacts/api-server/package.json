@@ -17,6 +17,8 @@
     "@workspace/case-domain": "workspace:*",
     "@workspace/evidence-domain": "workspace:*",
     "@workspace/dna-domain": "workspace:*",
+    "@workspace/kinship-domain": "workspace:*",
+    "@workspace/intelligence-domain": "workspace:*",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "drizzle-orm": "catalog:",

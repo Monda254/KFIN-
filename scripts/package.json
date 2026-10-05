@@ -22,6 +22,8 @@
     "case:test": "tsx ./src/case-test.ts",
     "evidence:test": "tsx ./src/evidence-test.ts",
     "dna:test": "tsx ./src/dna-test.ts",
+    "kinship:test": "tsx ./src/kinship-test.ts",
+    "intelligence:test": "tsx ./src/intelligence-test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
@@ -29,7 +31,9 @@
     "@workspace/security": "workspace:*",
     "@workspace/case-domain": "workspace:*",
     "@workspace/evidence-domain": "workspace:*",
-    "@workspace/dna-domain": "workspace:*"
+    "@workspace/dna-domain": "workspace:*",
+    "@workspace/kinship-domain": "workspace:*",
+    "@workspace/intelligence-domain": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",

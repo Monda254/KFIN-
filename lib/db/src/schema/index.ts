@@ -5,5 +5,7 @@ export * from "./cases";
 export * from "./evidence";
 export * from "./dna";
 export * from "./laboratory";
+export * from "./kinship";
+export * from "./intelligence";
 export * from "./audit";
 export * from "./relations";

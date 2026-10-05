@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { verifyAccessToken } from "../crypto/tokens";
 import { verifyApiKey } from "../crypto/service-keys";
 import { AuthorizationEngine } from "../authorization/engine";

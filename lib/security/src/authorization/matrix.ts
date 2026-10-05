@@ -2,7 +2,7 @@ import type { ClassificationLevel } from "../types";
 
 export interface PermissionDefinition {
   code: string;
-  domainGroup: "IDENTITY" | "CASES" | "EVIDENCE" | "DNA" | "LABORATORY" | "GOVERNANCE";
+  domainGroup: "IDENTITY" | "CASES" | "EVIDENCE" | "DNA" | "LABORATORY" | "GOVERNANCE" | "KINSHIP" | "INTELLIGENCE";
   description: string;
 }
 
@@ -46,6 +46,22 @@ export const CANONICAL_PERMISSIONS: readonly PermissionDefinition[] = [
   { code: "dna:match_confirm", domainGroup: "DNA", description: "Review and confirm candidate DNA matches" },
   { code: "dna:view_sensitive", domainGroup: "DNA", description: "View raw STR allele peak heights, RFU metrics, and electropherograms" },
   { code: "dna:export", domainGroup: "DNA", description: "Export CODIS or formal DNA profile data packages" },
+
+  // KINSHIP & RELATIONSHIP ANALYSIS
+  { code: "kinship:create", domainGroup: "KINSHIP", description: "Create biological relationship investigation, hypothesis, or pedigree" },
+  { code: "kinship:read", domainGroup: "KINSHIP", description: "View kinship investigation details, pedigree structures, and analyses" },
+  { code: "kinship:analyze", domainGroup: "KINSHIP", description: "Execute scientific kinship likelihood and relationship calculation" },
+  { code: "kinship:review", domainGroup: "KINSHIP", description: "Perform human scientific review and approval of kinship result" },
+  { code: "familial_search:request", domainGroup: "KINSHIP", description: "Submit authorized request for familial DNA searching" },
+  { code: "familial_search:authorize", domainGroup: "KINSHIP", description: "Approve and authorize legal basis for familial DNA search" },
+
+  // CROSS-CASE FORENSIC INTELLIGENCE & LINK ANALYSIS
+  { code: "intelligence:read", domainGroup: "INTELLIGENCE", description: "View forensic relationships, observations, and graph leads" },
+  { code: "intelligence:create", domainGroup: "INTELLIGENCE", description: "Create forensic relationship or observation" },
+  { code: "intelligence:lead_manage", domainGroup: "INTELLIGENCE", description: "Assign, update, or review intelligence leads" },
+  { code: "intelligence:graph_traverse", domainGroup: "INTELLIGENCE", description: "Execute multi-depth cross-case graph search" },
+  { code: "intelligence:case_link", domainGroup: "INTELLIGENCE", description: "Propose or authorize cross-case linking" },
+  { code: "intelligence:export", domainGroup: "INTELLIGENCE", description: "Export graph intelligence packages" },
 
   // LABORATORY & EXAMINATION
   { code: "lab:submit", domainGroup: "LABORATORY", description: "Submit forensic evidence for analytical laboratory examination" },
@@ -94,6 +110,9 @@ export const ROLE_PERMISSIONS: Record<string, string[]> = {
     "evidence:transfer",
     "lab:submit",
     "dna:read",
+    "intelligence:read",
+    "intelligence:lead_manage",
+    "intelligence:graph_traverse",
   ],
   FORENSIC_EXAMINER: [
     "case:read",
@@ -154,18 +173,32 @@ export const ROLE_PERMISSIONS: Record<string, string[]> = {
     "dna:match_confirm",
     "dna:view_sensitive",
     "dna:export",
+    "kinship:create",
+    "kinship:read",
+    "kinship:analyze",
+    "kinship:review",
+    "familial_search:request",
+    "familial_search:authorize",
+    "intelligence:read",
+    "intelligence:create",
+    "intelligence:graph_traverse",
   ],
   GOVERNANCE_OFFICER: [
     "disclosure:create",
     "retention:manage",
     "legal_hold:manage",
     "audit:read",
+    "familial_search:authorize",
+    "intelligence:read",
+    "intelligence:case_link",
   ],
   AUDITOR: [
     "audit:read",
     "case:read",
     "evidence:read",
     "dna:read",
+    "kinship:read",
+    "intelligence:read",
   ],
   INSTITUTIONAL_OFFICER: [
     "case:read",
@@ -219,6 +252,22 @@ export const ACTION_POLICIES: Record<string, ActionPolicy> = {
   "dna:match_confirm": { action: "dna:match_confirm", requiredPermission: "dna:match_confirm", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: true },
   "dna:view_sensitive": { action: "dna:view_sensitive", requiredPermission: "dna:view_sensitive", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: false },
   "dna:export": { action: "dna:export", requiredPermission: "dna:export", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: false },
+
+  // Kinship operations
+  "kinship:create": { action: "kinship:create", requiredPermission: "kinship:create", minimumClearance: "CONFIDENTIAL", requiresPurpose: true, allowCrossOrg: false },
+  "kinship:read": { action: "kinship:read", requiredPermission: "kinship:read", minimumClearance: "CONFIDENTIAL", requiresPurpose: false, allowCrossOrg: false },
+  "kinship:analyze": { action: "kinship:analyze", requiredPermission: "kinship:analyze", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: true },
+  "kinship:review": { action: "kinship:review", requiredPermission: "kinship:review", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: true },
+  "familial_search:request": { action: "familial_search:request", requiredPermission: "familial_search:request", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: true },
+  "familial_search:authorize": { action: "familial_search:authorize", requiredPermission: "familial_search:authorize", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: true },
+
+  // Intelligence operations
+  "intelligence:read": { action: "intelligence:read", requiredPermission: "intelligence:read", minimumClearance: "CONFIDENTIAL", requiresPurpose: false, allowCrossOrg: false },
+  "intelligence:create": { action: "intelligence:create", requiredPermission: "intelligence:create", minimumClearance: "CONFIDENTIAL", requiresPurpose: true, allowCrossOrg: false },
+  "intelligence:lead_manage": { action: "intelligence:lead_manage", requiredPermission: "intelligence:lead_manage", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: false },
+  "intelligence:graph_traverse": { action: "intelligence:graph_traverse", requiredPermission: "intelligence:graph_traverse", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: true },
+  "intelligence:case_link": { action: "intelligence:case_link", requiredPermission: "intelligence:case_link", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: true },
+  "intelligence:export": { action: "intelligence:export", requiredPermission: "intelligence:export", minimumClearance: "HIGHLY_RESTRICTED", requiresPurpose: true, allowCrossOrg: false },
 
   // Laboratory operations
   "lab:submit": { action: "lab:submit", requiredPermission: "lab:submit", minimumClearance: "RESTRICTED", requiresPurpose: true, allowCrossOrg: true },

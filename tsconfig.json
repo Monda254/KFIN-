@@ -20,6 +20,15 @@
     },
     {
       "path": "./lib/evidence-domain"
+    },
+    {
+      "path": "./lib/dna-domain"
+    },
+    {
+      "path": "./lib/kinship-domain"
+    },
+    {
+      "path": "./lib/intelligence-domain"
     }
   ]
 }

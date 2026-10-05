@@ -258,6 +258,29 @@ export const auditActionEnum = pgEnum("audit_action", [
   "EVIDENCE_EXCEPTION_RESOLVE",
   "EVIDENCE_LEGAL_HOLD_APPLY",
   "EVIDENCE_LEGAL_HOLD_RELEASE",
+  "KINSHIP_INVESTIGATION_CREATE",
+  "KINSHIP_HYPOTHESIS_CREATE",
+  "KINSHIP_PEDIGREE_UPDATE",
+  "KINSHIP_ANALYSIS_EXECUTE",
+  "KINSHIP_RESULT_VIEW",
+  "KINSHIP_RESULT_REVIEW",
+  "KINSHIP_RESULT_APPROVE",
+  "KINSHIP_RESULT_REJECT",
+  "FAMILIAL_SEARCH_REQUEST",
+  "FAMILIAL_SEARCH_AUTHORIZE",
+  "FAMILIAL_SEARCH_EXECUTE",
+  "KINSHIP_EXPORT",
+  "INTELLIGENCE_RELATIONSHIP_CREATE",
+  "INTELLIGENCE_RELATIONSHIP_UPDATE",
+  "INTELLIGENCE_OBSERVATION_CREATE",
+  "INTELLIGENCE_LEAD_CREATE",
+  "INTELLIGENCE_LEAD_ASSIGN",
+  "INTELLIGENCE_LEAD_REVIEW",
+  "INTELLIGENCE_GRAPH_SEARCH",
+  "CASE_LINK_CREATE",
+  "CASE_LINK_APPROVE",
+  "ENTITY_RESOLUTION_MERGE",
+  "INTELLIGENCE_EXPORT",
 ]);
 
 export const auditOutcomeEnum = pgEnum("audit_outcome", [
@@ -282,3 +305,78 @@ export const candidateMatchStatusEnum = pgEnum("candidate_match_status", [
   "EXCLUDED",
   "INCONCLUSIVE",
 ]);
+
+export const relationshipTypeEnum = pgEnum("relationship_type", [
+  "PARENT_CHILD",
+  "FULL_SIBLINGS",
+  "HALF_SIBLINGS",
+  "GRANDPARENT_GRANDCHILD",
+  "AUNT_UNCLE_NIECE_NEPHEW",
+  "COUSIN",
+  "OTHER_APPROVED",
+]);
+
+export const kinshipStatusEnum = pgEnum("kinship_status", [
+  "DRAFT",
+  "AUTHORIZATION_PENDING",
+  "AUTHORIZED",
+  "ANALYSIS_PENDING",
+  "ANALYZING",
+  "REVIEW_PENDING",
+  "UNDER_REVIEW",
+  "ACCEPTED",
+  "REJECTED",
+  "INCONCLUSIVE",
+  "CLOSED",
+]);
+
+export const kinshipResultCategoryEnum = pgEnum("kinship_result_category", [
+  "SUPPORTED",
+  "EXCLUDED",
+  "INCONCLUSIVE",
+]);
+
+export const pedigreeNodeStatusEnum = pgEnum("pedigree_node_status", [
+  "KNOWN",
+  "UNKNOWN",
+  "HYPOTHESIZED",
+  "CONFIRMED",
+  "EXCLUDED",
+  "UNCERTAIN",
+]);
+
+export const familialSearchStatusEnum = pgEnum("familial_search_status", [
+  "REQUESTED",
+  "AUTHORIZATION_PENDING",
+  "AUTHORIZED",
+  "SEARCHING",
+  "COMPLETED",
+  "REJECTED",
+]);
+
+export const relationshipClassEnum = pgEnum("relationship_class", [
+  "FACT",
+  "ANALYTICAL_RELATIONSHIP",
+  "INVESTIGATIVE_LEAD",
+  "HYPOTHESIS",
+  "CONFIRMED_FORENSIC_RELATIONSHIP",
+]);
+
+export const intelligenceLeadStatusEnum = pgEnum("intelligence_lead_status", [
+  "NEW",
+  "ASSIGNED",
+  "UNDER_REVIEW",
+  "CONFIRMED",
+  "REJECTED",
+  "INCONCLUSIVE",
+  "CLOSED",
+]);
+
+export const caseLinkStatusEnum = pgEnum("case_link_status", [
+  "PROPOSED",
+  "UNDER_REVIEW",
+  "CONFIRMED",
+  "REJECTED",
+]);
+
+

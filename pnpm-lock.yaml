@@ -95,6 +95,12 @@ importers:
       '@workspace/evidence-domain':
         specifier: workspace:*
         version: link:../../lib/evidence-domain
+      '@workspace/intelligence-domain':
+        specifier: workspace:*
+        version: link:../../lib/intelligence-domain
+      '@workspace/kinship-domain':
+        specifier: workspace:*
+        version: link:../../lib/kinship-domain
       '@workspace/security':
         specifier: workspace:*
         version: link:../../lib/security
@@ -596,6 +602,56 @@ importers:
         specifier: 'catalog:'
         version: 25.9.6
 
+  lib/intelligence-domain:
+    dependencies:
+      '@workspace/case-domain':
+        specifier: workspace:*
+        version: link:../case-domain
+      '@workspace/db':
+        specifier: workspace:*
+        version: link:../db
+      '@workspace/dna-domain':
+        specifier: workspace:*
+        version: link:../dna-domain
+      '@workspace/evidence-domain':
+        specifier: workspace:*
+        version: link:../evidence-domain
+      '@workspace/kinship-domain':
+        specifier: workspace:*
+        version: link:../kinship-domain
+      '@workspace/security':
+        specifier: workspace:*
+        version: link:../security
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.2(@types/pg@8.23.1)(pg@8.23.0)
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.9.6
+
+  lib/kinship-domain:
+    dependencies:
+      '@workspace/db':
+        specifier: workspace:*
+        version: link:../db
+      '@workspace/dna-domain':
+        specifier: workspace:*
+        version: link:../dna-domain
+      '@workspace/evidence-domain':
+        specifier: workspace:*
+        version: link:../evidence-domain
+      '@workspace/security':
+        specifier: workspace:*
+        version: link:../security
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.2(@types/pg@8.23.1)(pg@8.23.0)
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.9.6
+
   lib/security:
     dependencies:
       '@workspace/db':
@@ -620,6 +676,12 @@ importers:
       '@workspace/evidence-domain':
         specifier: workspace:*
         version: link:../lib/evidence-domain
+      '@workspace/intelligence-domain':
+        specifier: workspace:*
+        version: link:../lib/intelligence-domain
+      '@workspace/kinship-domain':
+        specifier: workspace:*
+        version: link:../lib/kinship-domain
       '@workspace/security':
         specifier: workspace:*
         version: link:../lib/security
